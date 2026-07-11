@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Ncréa</title>
+<meta name="description" content="Contactez le studio Ncréa pour discuter de votre projet d'identité visuelle, UX/UI ou animation 2D.">
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --bg:#ffffff;
+  --paper:#FAF9F6;
+  --ink:#15161A;
+  --ink-soft:#5B5D63;
+  --ink-faint:#9A9C9F;
+  --line:#E9E4D9;
+
+  --visuel:#C2672B;
+  --visuel-soft:#F7E6D4;
+  --uxui:#2E3A78;
+  --uxui-soft:#E3E5F1;
+  --anim2d:#0E7C57;
+  --anim2d-soft:#DBEEE3;
+
+  --active:var(--visuel);
+  --active-soft:var(--visuel-soft);
+  --hue-shift:0deg;
+
+  --radius:16px;
+  --radius-sm:10px;
+  --pill:999px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:var(--active);color:#fff;}
+a{color:inherit;text-decoration:none;}
+img{max-width:100%;display:block;}
+.mono{font-family:'IBM Plex Mono',monospace;}
+h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;line-height:1.08;}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px;position:relative;z-index:2;}
+button{font:inherit;}
+
+/* ================= AMBIENT AURA ================= */
+.aura{
+  position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+  filter:hue-rotate(var(--hue-shift)) saturate(1.1);
+  transition:filter 1s cubic-bezier(.4,0,.2,1);
+}
+.aura span{position:absolute;border-radius:50%;filter:blur(70px);opacity:.4;mix-blend-mode:multiply;}
+.aura span:nth-child(1){width:52vw;height:52vw;top:-16vw;left:-12vw;background:radial-gradient(circle at 35% 30%, #E79A5B, transparent 68%);animation:driftA 26s ease-in-out infinite alternate;}
+.aura span:nth-child(2){width:46vw;height:46vw;top:8vw;right:-14vw;background:radial-gradient(circle at 60% 40%, #6672C9, transparent 68%);animation:driftB 32s ease-in-out infinite alternate;}
+.aura span:nth-child(3){width:40vw;height:40vw;bottom:-14vw;left:22vw;background:radial-gradient(circle at 50% 50%, #4FAE85, transparent 70%);animation:driftC 30s ease-in-out infinite alternate;}
+@keyframes driftA{0%{transform:translate(0,0) scale(1);}100%{transform:translate(6vw,8vw) scale(1.15);}}
+@keyframes driftB{0%{transform:translate(0,0) scale(1);}100%{transform:translate(-7vw,6vw) scale(0.9);}}
+@keyframes driftC{0%{transform:translate(0,0) scale(1);}100%{transform:translate(5vw,-6vw) scale(1.1);}}
+@media(max-width:760px){.aura span{opacity:.28;}}
+
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-faint);display:flex;align-items:center;gap:10px;}
+.eyebrow::before{content:'';width:22px;height:1px;background:var(--ink-faint);display:inline-block;}
+
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.04em;padding:14px 24px;border:1px solid var(--ink);border-radius:var(--pill);transition:background .35s ease, color .35s ease, border-color .35s ease, box-shadow .35s ease, transform .25s ease;cursor:pointer;background:none;}
+.btn.primary{background:var(--ink);color:#fff;}
+.btn.primary::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg, transparent, rgba(255,255,255,.35), transparent);transform:translateX(-120%);transition:transform .6s ease;}
+.btn.primary:hover::before{transform:translateX(120%);}
+.btn.primary:hover{background:var(--active);border-color:var(--active);box-shadow:0 8px 28px -8px var(--active);transform:translateY(-2px);}
+.btn.ghost:hover{background:var(--ink);color:#fff;transform:translateY(-2px);}
+.btn.small{padding:10px 18px;font-size:12px;}
+.btn svg{width:14px;height:14px;transition:transform .3s ease;}
+.btn:hover svg{transform:translateX(4px);}
+.btn[disabled]{opacity:.5;cursor:not-allowed;}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.3,1), transform .8s cubic-bezier(.2,.7,.3,1);}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+@media(prefers-reduced-motion:reduce){*{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;}}
+
+/* ================= header ================= */
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.78);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;}
+.logo{font-family:'Fraunces',serif;font-weight:700;font-size:22px;display:flex;align-items:baseline;gap:2px;}
+.logo .dot{color:var(--active);transition:color .5s ease;}
+.nav-links{display:flex;gap:32px;align-items:center;}
+.nav-links a{font-size:14px;color:var(--ink-soft);transition:color .2s ease;position:relative;padding:2px 0;}
+.nav-links a::after{content:'';position:absolute;left:0;right:0;bottom:-4px;height:1px;background:var(--active);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
+.nav-links a:hover,.nav-links a.active{color:var(--ink);}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+.nav-cta{display:flex;align-items:center;gap:24px;}
+.burger{display:none;}
+
+@media(max-width:900px){
+  .nav-links{position:fixed;inset:0 0 0 auto;width:78%;max-width:320px;background:var(--bg);flex-direction:column;align-items:flex-start;padding:100px 32px 32px;gap:26px;transform:translateX(100%);transition:transform .4s cubic-bezier(.2,.8,.2,1);border-left:1px solid var(--line);z-index:10;}
+  .nav-links.open{transform:translateX(0);}
+  .nav-links a{font-size:18px;}
+  .burger{display:block;width:24px;height:18px;position:relative;cursor:pointer;z-index:60;}
+  .burger span{position:absolute;left:0;right:0;height:2px;background:var(--ink);transition:all .25s ease;}
+  .burger span:nth-child(1){top:0;}
+  .burger span:nth-child(2){top:8px;}
+  .burger span:nth-child(3){top:16px;}
+  .burger.open span:nth-child(1){transform:translateY(8px) rotate(45deg);}
+  .burger.open span:nth-child(2){opacity:0;}
+  .burger.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
+}
+
+/* ================= hero (home) ================= */
+.hero{padding:130px 0 100px;border-bottom:1px solid var(--line);}
+.hero-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:64px;align-items:end;}
+.hero h1{font-size:clamp(38px,5.4vw,74px);margin:22px 0 26px;overflow:hidden;}
+.hero h1 .line{display:block;overflow:hidden;}
+.hero h1 .line span{display:inline-block;animation:riseIn .9s cubic-bezier(.2,.7,.2,1) both;}
+.hero h1 .line:nth-child(1) span{animation-delay:.05s;}
+.hero h1 .line:nth-child(2) span{animation-delay:.2s;}
+.hero h1 em{font-style:italic;font-weight:500;background:linear-gradient(90deg,var(--visuel),var(--uxui) 45%,var(--anim2d) 90%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite;}
+@keyframes shine{to{background-position:200% center;}}
+@keyframes riseIn{from{transform:translateY(110%) rotate(3deg);opacity:0;}to{transform:translateY(0) rotate(0);opacity:1;}}
+.hero p{font-size:17px;color:var(--ink-soft);max-width:460px;margin-bottom:34px;animation:fadeUp .8s .5s cubic-bezier(.2,.7,.2,1) both;}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap;animation:fadeUp .8s .65s cubic-bezier(.2,.7,.2,1) both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+.hero-marks{display:flex;flex-direction:column;gap:14px;}
+.mark-row{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid var(--line);border-radius:var(--radius);background:#fff;transition:border-color .3s ease, transform .3s ease, box-shadow .3s ease, background .3s ease;cursor:pointer;animation:fadeUp .7s cubic-bezier(.2,.7,.2,1) both;}
+.mark-row:nth-child(1){animation-delay:.5s;}
+.mark-row:nth-child(2){animation-delay:.62s;}
+.mark-row:nth-child(3){animation-delay:.74s;}
+.mark-row:hover{transform:translateY(-4px) translateX(2px);background:var(--paper);}
+.mark-row:nth-child(1):hover{border-color:var(--visuel);box-shadow:0 12px 30px -14px var(--visuel);}
+.mark-row:nth-child(2):hover{border-color:var(--uxui);box-shadow:0 12px 30px -14px var(--uxui);}
+.mark-row:nth-child(3):hover{border-color:var(--anim2d);box-shadow:0 12px 30px -14px var(--anim2d);}
+.mark-glyph{font-family:'Fraunces',serif;font-weight:700;font-size:20px;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;transition:transform .4s cubic-bezier(.3,1.4,.5,1);}
+.mark-row:hover .mark-glyph{transform:rotate(-12deg) scale(1.1);}
+.mark-row:nth-child(1) .mark-glyph{background:linear-gradient(135deg,var(--visuel),#E79A5B);}
+.mark-row:nth-child(2) .mark-glyph{background:linear-gradient(135deg,var(--uxui),#6672C9);}
+.mark-row:nth-child(3) .mark-glyph{background:linear-gradient(135deg,var(--anim2d),#4FAE85);}
+.mark-text b{display:block;font-size:14.5px;}
+.mark-text span{font-size:12.5px;color:var(--ink-faint);}
+@media(max-width:860px){.hero{padding:70px 0 60px;}.hero-grid{grid-template-columns:1fr;gap:44px;}}
+
+/* ================= page hero (inner pages) ================= */
+.page-hero{padding:76px 0 60px;border-bottom:1px solid var(--line);}
+.page-hero h1{font-size:clamp(32px,5vw,54px);margin:18px 0 20px;}
+.page-hero p{max-width:560px;color:var(--ink-soft);font-size:16px;}
+@media(max-width:760px){.page-hero{padding:52px 0 44px;}}
+
+/* ================= section heads ================= */
+.section{padding:110px 0;border-bottom:1px solid var(--line);position:relative;}
+.section:last-of-type{border-bottom:none;}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;margin-bottom:64px;}
+.section-head h2{font-size:clamp(28px,3.6vw,44px);}
+.section-head p{max-width:380px;color:var(--ink-soft);font-size:15px;}
+@media(max-width:760px){.section{padding:74px 0;}.section-head{flex-direction:column;align-items:flex-start;gap:18px;margin-bottom:44px;}}
+
+/* ================= axes cards ================= */
+.axes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.axis-card{position:relative;overflow:hidden;background:#fff;padding:44px 34px;border-radius:var(--radius);border:1px solid var(--line);display:flex;flex-direction:column;gap:20px;min-height:340px;transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease, border-color .4s ease;cursor:pointer;}
+.axis-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .5s ease;z-index:0;}
+.axis-card.c-visuel::before{background:linear-gradient(160deg,var(--visuel-soft),transparent 65%);}
+.axis-card.c-uxui::before{background:linear-gradient(160deg,var(--uxui-soft),transparent 65%);}
+.axis-card.c-anim2d::before{background:linear-gradient(160deg,var(--anim2d-soft),transparent 65%);}
+.axis-card:hover::before{opacity:1;}
+.axis-card:hover{transform:translateY(-8px);}
+.axis-card.c-visuel:hover{border-color:var(--visuel);box-shadow:0 20px 44px -22px var(--visuel);}
+.axis-card.c-uxui:hover{border-color:var(--uxui);box-shadow:0 20px 44px -22px var(--uxui);}
+.axis-card.c-anim2d:hover{border-color:var(--anim2d);box-shadow:0 20px 44px -22px var(--anim2d);}
+.axis-card > *{position:relative;z-index:1;}
+.axis-glyph{font-family:'Fraunces',serif;font-weight:700;font-size:34px;width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;transition:transform .5s cubic-bezier(.3,1.5,.4,1);}
+.axis-card:hover .axis-glyph{transform:rotate(14deg) scale(1.08);}
+.axis-card.c-visuel .axis-glyph{background:linear-gradient(135deg,var(--visuel),#E79A5B);}
+.axis-card.c-uxui .axis-glyph{background:linear-gradient(135deg,var(--uxui),#6672C9);font-size:24px;}
+.axis-card.c-anim2d .axis-glyph{background:linear-gradient(135deg,var(--anim2d),#4FAE85);}
+.axis-card h3{font-size:22px;margin-bottom:4px;}
+.axis-card .tag{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);}
+.axis-card p{color:var(--ink-soft);font-size:14.5px;}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:8px;}
+.chip{font-family:'IBM Plex Mono',monospace;font-size:11px;border:1px solid var(--line);background:#fff;border-radius:var(--pill);padding:5px 12px;color:var(--ink-soft);transition:all .3s ease;}
+.axis-card.c-visuel:hover .chip{border-color:var(--visuel);color:var(--visuel);}
+.axis-card.c-uxui:hover .chip{border-color:var(--uxui);color:var(--uxui);}
+.axis-card.c-anim2d:hover .chip{border-color:var(--anim2d);color:var(--anim2d);}
+@media(max-width:860px){.axes{grid-template-columns:1fr;}}
+
+/* ================= savoir-faire detail blocks ================= */
+.detail-block{display:grid;grid-template-columns:0.9fr 1.4fr;gap:56px;padding:70px 0;border-bottom:1px solid var(--line);align-items:start;}
+.detail-block:last-child{border-bottom:none;}
+.detail-side{position:sticky;top:110px;}
+.detail-glyph{font-family:'Fraunces',serif;font-weight:700;font-size:30px;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;margin-bottom:18px;}
+.detail-block.c-visuel .detail-glyph{background:linear-gradient(135deg,var(--visuel),#E79A5B);}
+.detail-block.c-uxui .detail-glyph{background:linear-gradient(135deg,var(--uxui),#6672C9);font-size:20px;}
+.detail-block.c-anim2d .detail-glyph{background:linear-gradient(135deg,var(--anim2d),#4FAE85);}
+.detail-side h2{font-size:clamp(24px,3vw,32px);margin-bottom:10px;}
+.detail-side .tag{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px;display:block;}
+.detail-side p{color:var(--ink-soft);font-size:15px;margin-bottom:22px;}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.detail-card{border:1px solid var(--line);border-radius:var(--radius-sm);padding:20px;}
+.detail-card h4{font-size:14.5px;margin-bottom:8px;font-family:'Inter',sans-serif;font-weight:600;}
+.detail-card p{font-size:13px;color:var(--ink-soft);margin:0;}
+.detail-block.c-visuel .detail-card h4{color:var(--visuel);}
+.detail-block.c-uxui .detail-card h4{color:var(--uxui);}
+.detail-block.c-anim2d .detail-card h4{color:var(--anim2d);}
+@media(max-width:900px){.detail-block{grid-template-columns:1fr;gap:28px;}.detail-side{position:static;}.detail-grid{grid-template-columns:1fr;}}
+
+/* ================= process ================= */
+.tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;position:relative;}
+.tab-btn{font-family:'IBM Plex Mono',monospace;font-size:13px;padding:12px 20px;border:1px solid var(--line);border-radius:var(--pill);color:var(--ink-soft);transition:all .35s ease;cursor:pointer;background:#fff;display:flex;align-items:center;gap:10px;}
+.tab-btn .sw{width:8px;height:8px;border-radius:50%;background:var(--ink-faint);transition:background .3s ease, box-shadow .3s ease;}
+.tab-btn[data-axis="visuel"].active,.tab-btn[data-axis="visuel"]:hover{border-color:var(--visuel);color:var(--ink);}
+.tab-btn[data-axis="visuel"].active .sw,.tab-btn[data-axis="visuel"]:hover .sw{background:var(--visuel);box-shadow:0 0 0 5px var(--visuel-soft);}
+.tab-btn[data-axis="uxui"].active,.tab-btn[data-axis="uxui"]:hover{border-color:var(--uxui);color:var(--ink);}
+.tab-btn[data-axis="uxui"].active .sw,.tab-btn[data-axis="uxui"]:hover .sw{background:var(--uxui);box-shadow:0 0 0 5px var(--uxui-soft);}
+.tab-btn[data-axis="anim2d"].active,.tab-btn[data-axis="anim2d"]:hover{border-color:var(--anim2d);color:var(--ink);}
+.tab-btn[data-axis="anim2d"].active .sw,.tab-btn[data-axis="anim2d"]:hover .sw{background:var(--anim2d);box-shadow:0 0 0 5px var(--anim2d-soft);}
+.tab-btn.active{background:var(--paper);}
+
+.timeline{position:relative;margin-top:44px;}
+.timeline::before{content:'';position:absolute;left:0;right:0;top:19px;height:2px;background:var(--line);border-radius:2px;}
+.timeline::after{content:'';position:absolute;left:0;top:19px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--active),transparent);width:var(--progress,20%);transition:width .6s cubic-bezier(.3,.8,.3,1), background .5s ease;}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:24px;}
+.step{position:relative;padding-top:52px;}
+.step-num{position:absolute;top:0;left:0;width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);transition:all .4s cubic-bezier(.3,1.2,.4,1);}
+.step.active-step .step-num{background:var(--active);border-color:var(--active);color:#fff;box-shadow:0 0 0 6px var(--active-soft);transform:scale(1.08);}
+.step h4{font-size:16px;margin-bottom:8px;font-weight:600;font-family:'Inter',sans-serif;transition:color .4s ease;}
+.step.active-step h4{color:var(--active);}
+.step p{font-size:13.5px;color:var(--ink-soft);}
+@media(max-width:960px){.steps{grid-template-columns:1fr;gap:0;}.timeline::before{left:19px;right:auto;top:0;bottom:0;width:2px;height:auto;}.timeline::after{left:19px;top:0;bottom:auto;width:2px;height:var(--progress,20%);}.step{padding:0 0 40px 60px;}.step-num{top:0;left:0;}}
+
+/* ================= engagement / payment steps ================= */
+.engage-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.engage-card{border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px;background:#fff;position:relative;transition:transform .35s ease, box-shadow .35s ease;}
+.engage-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px -22px rgba(0,0,0,.2);}
+.engage-num{font-family:'Fraunces',serif;font-size:34px;color:var(--active);margin-bottom:12px;transition:color .5s ease;}
+.engage-card h4{font-size:15.5px;margin-bottom:8px;}
+.engage-card p{font-size:13px;color:var(--ink-soft);}
+.engage-card.money{background:var(--paper);border-color:var(--active);}
+@media(max-width:900px){.engage-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.engage-grid{grid-template-columns:1fr;}}
+
+/* ================= manifesto ================= */
+.manifesto{padding:110px 0;border-bottom:1px solid var(--line);background:var(--paper);position:relative;}
+.manifesto .wrap{max-width:820px;}
+.manifesto h2{font-size:clamp(26px,3.4vw,38px);font-weight:500;font-style:italic;background:linear-gradient(100deg,var(--ink) 30%,var(--active) 50%,var(--ink) 70%);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 9s linear infinite;}
+.manifesto .eyebrow{margin-bottom:26px;}
+.manifesto-foot{display:flex;justify-content:space-between;margin-top:48px;flex-wrap:wrap;gap:20px;}
+.stat b{font-family:'Fraunces',serif;font-size:30px;display:block;color:var(--active);transition:color .5s ease;}
+.stat span{font-size:12.5px;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace;}
+.stats-row{display:flex;gap:56px;flex-wrap:wrap;}
+
+/* ================= work grid + filters ================= */
+.filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:44px;}
+.filter-btn{font-family:'IBM Plex Mono',monospace;font-size:12.5px;padding:10px 18px;border:1px solid var(--line);border-radius:var(--pill);background:#fff;color:var(--ink-soft);cursor:pointer;transition:all .3s ease;}
+.filter-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.work-card{background:#fff;aspect-ratio:4/3;position:relative;overflow:hidden;border-radius:var(--radius);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:flex-end;padding:22px;transition:transform .4s ease, box-shadow .4s ease, opacity .3s ease;}
+.work-card.hidden{display:none;}
+.work-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px -20px rgba(0,0,0,.25);}
+.work-card .bg{position:absolute;inset:0;opacity:.1;transition:opacity .4s ease, transform .6s ease;transform:scale(1);}
+.work-card:hover .bg{opacity:.22;transform:scale(1.08);}
+.work-card .k{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;position:relative;}
+.work-card h4{font-size:18px;position:relative;font-family:'Fraunces',serif;font-weight:600;transition:transform .4s ease;}
+.work-card:hover h4{transform:translateX(4px);}
+.work-card.c-visuel .bg{background:linear-gradient(135deg,var(--visuel),#E79A5B);}
+.work-card.c-uxui .bg{background:linear-gradient(135deg,var(--uxui),#6672C9);}
+.work-card.c-anim2d .bg{background:linear-gradient(135deg,var(--anim2d),#4FAE85);}
+.work-card.c-visuel .k{color:var(--visuel);}
+.work-card.c-uxui .k{color:var(--uxui);}
+.work-card.c-anim2d .k{color:var(--anim2d);}
+@media(max-width:860px){.work-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.work-grid{grid-template-columns:1fr;}}
+
+/* ================= cta / contact ================= */
+.cta-section{padding:130px 0;text-align:center;border-bottom:1px solid var(--line);position:relative;}
+.cta-section h2{font-size:clamp(32px,5vw,58px);max-width:760px;margin:0 auto 36px;}
+.cta-actions{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;}
+.cta-section .eyebrow{justify-content:center;margin-bottom:22px;}
+.cta-section .eyebrow::before{display:none;}
+
+/* ================= contact page ================= */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;}
+.contact-info-card{border:1px solid var(--line);border-radius:var(--radius);padding:28px;margin-bottom:16px;background:#fff;transition:transform .3s ease, box-shadow .3s ease;}
+.contact-info-card:hover{transform:translateY(-4px);box-shadow:0 16px 34px -20px rgba(0,0,0,.2);}
+.contact-info-card h4{font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;font-family:'IBM Plex Mono',monospace;color:var(--ink-faint);margin-bottom:10px;}
+.contact-info-card p, .contact-info-card a{font-size:16px;font-family:'Fraunces',serif;}
+@media(max-width:900px){.contact-grid{grid-template-columns:1fr;gap:36px;}}
+
+/* ================= forms (shared: modal + contact page) ================= */
+.field{margin-bottom:20px;}
+.field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);margin-bottom:8px;}
+.field input[type="text"],.field input[type="email"],.field input[type="tel"],.field select,.field textarea{
+  width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:var(--radius-sm);font-family:'Inter',sans-serif;font-size:14.5px;color:var(--ink);background:#fff;transition:border-color .25s ease, box-shadow .25s ease;
+}
+.field textarea{resize:vertical;min-height:90px;}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--active);box-shadow:0 0 0 4px var(--active-soft);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:560px){.field-row{grid-template-columns:1fr;}}
+.check-group{display:flex;flex-wrap:wrap;gap:10px;}
+.check-pill{position:relative;}
+.check-pill input{position:absolute;opacity:0;width:0;height:0;}
+.check-pill span{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--line);border-radius:var(--pill);font-size:13px;color:var(--ink-soft);cursor:pointer;transition:all .25s ease;font-family:'IBM Plex Mono',monospace;}
+.check-pill input:checked + span{background:var(--ink);color:#fff;border-color:var(--ink);}
+.field-hint{font-size:12px;color:var(--ink-faint);margin-top:6px;}
+.form-note{font-size:12.5px;color:var(--ink-faint);margin-top:18px;line-height:1.6;}
+
+/* ================= modal ================= */
+.modal-overlay{position:fixed;inset:0;background:rgba(21,18,15,.55);backdrop-filter:blur(5px);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .35s ease;}
+.modal-overlay.open{opacity:1;pointer-events:auto;}
+.modal{background:#fff;border-radius:22px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;padding:40px;position:relative;transform:translateY(18px) scale(.97);transition:transform .4s cubic-bezier(.2,.8,.2,1);box-shadow:0 50px 90px -20px rgba(0,0,0,.4);}
+.modal-overlay.open .modal{transform:translateY(0) scale(1);}
+.modal-close{position:absolute;top:20px;right:20px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s ease;background:#fff;}
+.modal-close:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+.modal-close svg{width:16px;height:16px;}
+.modal h3{font-size:26px;margin-bottom:6px;}
+.modal .eyebrow{margin-bottom:16px;}
+.modal-intro{color:var(--ink-soft);font-size:14.5px;margin-bottom:28px;}
+.confirm-panel{display:none;flex-direction:column;align-items:center;text-align:center;gap:18px;padding:20px 0;}
+.confirm-panel.show{display:flex;}
+.confirm-check{width:64px;height:64px;border-radius:50%;background:var(--anim2d-soft);display:flex;align-items:center;justify-content:center;}
+.confirm-check svg{width:30px;height:30px;stroke:var(--anim2d);}
+.confirm-panel h3{margin-bottom:2px;}
+.confirm-steps{text-align:left;width:100%;margin-top:10px;display:flex;flex-direction:column;gap:14px;}
+.confirm-step{display:flex;gap:14px;align-items:flex-start;}
+.confirm-step .n{font-family:'IBM Plex Mono',monospace;font-size:12px;width:26px;height:26px;border-radius:50%;background:var(--paper);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.confirm-step p{font-size:13.5px;color:var(--ink-soft);margin:0;}
+.confirm-step b{color:var(--ink);}
+#projectForm.hide-form{display:none;}
+
+/* ================= footer ================= */
+footer{padding:56px 0 40px;position:relative;}
+.foot-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:36px;margin-bottom:48px;}
+.foot-col h5{font-family:'IBM Plex Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);margin-bottom:16px;}
+.foot-col a,.foot-col p{display:block;font-size:14px;color:var(--ink-soft);margin-bottom:10px;transition:color .25s ease;}
+.foot-col a:hover{color:var(--active);}
+.foot-bottom{display:flex;justify-content:space-between;padding-top:28px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-faint);flex-wrap:wrap;gap:12px;}
+
+
+</style>
+</head>
+<body>
+
+<div class="aura" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="logo">Ncréa<span class="dot">.</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Accueil</a>
+      <a href="savoir-faire.html">Nos savoir-faire</a>
+      <a href="process.html">Notre process</a>
+      <a href="realisations.html">Réalisations</a>
+      <a href="contact.html" class="active">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <button class="btn primary js-open-project-modal">Démarrer un projet</button>
+      <div class="burger" id="burger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</header>
+
+
+<section class="page-hero">
+  <div class="wrap reveal in">
+    <div class="eyebrow">Contact</div>
+    <h1>Parlons de votre marque.</h1>
+    <p>Une question, un devis, un simple bonjour — écrivez-nous. Pour cadrer un vrai projet, préférez le formulaire "Démarrer un projet".</p>
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="wrap contact-grid">
+    <div class="reveal">
+      <div class="contact-info-card">
+        <h4>Email</h4>
+        <a href="mailto:otsemstudio@gmail.com">otsemstudio@gmail.com</a>
+      </div>
+      <div class="contact-info-card">
+        <h4>Téléphone / WhatsApp</h4>
+        <a href="tel:+250799496971">+250 799 496 971</a>
+      </div>
+      <div class="contact-info-card">
+        <h4>Localisation</h4>
+        <p>Kigali, Rwanda — projets menés dans toute l'Afrique</p>
+      </div>
+      <div class="contact-info-card">
+        <h4>Un projet précis en tête ?</h4>
+        <p style="font-family:'Inter',sans-serif;font-size:14px;color:var(--ink-soft);margin-bottom:14px;">Utilisez plutôt notre formulaire dédié : il nous permet de préparer un premier rendez-vous vraiment utile.</p>
+        <button class="btn small primary js-open-project-modal">Démarrer un projet</button>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <form id="contactForm">
+        <div class="field">
+          <label for="c-name">Nom</label>
+          <input type="text" id="c-name" required placeholder="Votre nom">
+        </div>
+        <div class="field">
+          <label for="c-email">Email</label>
+          <input type="email" id="c-email" required placeholder="vous@entreprise.com">
+        </div>
+        <div class="field">
+          <label for="c-subject">Sujet</label>
+          <input type="text" id="c-subject" placeholder="Ex: Question sur vos prestations">
+        </div>
+        <div class="field">
+          <label for="c-message">Message</label>
+          <textarea id="c-message" required placeholder="Votre message..."></textarea>
+        </div>
+        <button type="submit" class="btn primary" style="width:100%;justify-content:center;">
+          Envoyer le message
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+        <p class="form-note" id="contactNote">En envoyant ce formulaire, votre messagerie et WhatsApp s'ouvriront avec un message pré-rempli à destination de Ncréa — aucune donnée n'est stockée sur ce site.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <div class="logo" style="margin-bottom:16px;">Ncréa<span class="dot">.</span></div>
+        <p style="max-width:260px;">Studio de création visuelle, UX/UI et animation 2D basé à Kigali, au service des marques africaines.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Univers</h5>
+        <a href="savoir-faire.html">Ncréa-Visuel</a>
+        <a href="savoir-faire.html">Ncréa-UX/UI</a>
+        <a href="savoir-faire.html">Ncréa-2D</a>
+      </div>
+      <div class="foot-col">
+        <h5>Studio</h5>
+        <a href="process.html">Notre process</a>
+        <a href="realisations.html">Réalisations</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="foot-col">
+        <h5>Contact</h5>
+        <a href="mailto:otsemstudio@gmail.com">otsemstudio@gmail.com</a>
+        <a href="tel:+250799496971">+250 799 496 971</a>
+        <p>Kigali, Rwanda</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Ncréa. Tous droits réservés.</span>
+      <span>Visuel · UX/UI · 2D</span>
+    </div>
+  </div>
+</footer>
+
+
+<div class="modal-overlay" id="projectModalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-close" id="modalCloseBtn" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </div>
+
+    <form id="projectForm">
+      <div class="eyebrow">Démarrer un projet</div>
+      <h3 id="modalTitle">Parlons de votre marque</h3>
+      <p class="modal-intro">Répondez à ces quelques questions : elles nous permettent de préparer un premier rendez-vous utile, où nous cadrerons ensemble le périmètre exact et le prix.</p>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="f-company">Nom de l'entreprise</label>
+          <input type="text" id="f-company" required placeholder="Ex: Coopérative Umuganda">
+        </div>
+        <div class="field">
+          <label for="f-name">Votre nom</label>
+          <input type="text" id="f-name" required placeholder="Ex: Aline K.">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input type="email" id="f-email" required placeholder="vous@entreprise.com">
+        </div>
+        <div class="field">
+          <label for="f-phone">Téléphone (optionnel)</label>
+          <input type="tel" id="f-phone" placeholder="+250 7...">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Quel(s) axe(s) vous intéresse(nt) ?</label>
+        <div class="check-group" id="axisCheckGroup">
+          <label class="check-pill"><input type="checkbox" name="axis" value="Ncréa-Visuel"><span>Ncréa-Visuel</span></label>
+          <label class="check-pill"><input type="checkbox" name="axis" value="Ncréa-UX/UI"><span>Ncréa-UX/UI</span></label>
+          <label class="check-pill"><input type="checkbox" name="axis" value="Ncréa-2D"><span>Ncréa-2D</span></label>
+          <label class="check-pill"><input type="checkbox" name="axis" value="Je ne sais pas encore"><span>Je ne sais pas encore</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f-desc">Décrivez votre projet en quelques mots</label>
+        <textarea id="f-desc" required placeholder="Ex: Nous lançons une nouvelle gamme et avons besoin d'une identité visuelle complète..."></textarea>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="f-budget">Budget approximatif</label>
+          <select id="f-budget">
+            <option value="Moins de 500 $">Moins de 500 $</option>
+            <option value="500 - 1 500 $">500 – 1 500 $</option>
+            <option value="1 500 - 3 000 $">1 500 – 3 000 $</option>
+            <option value="Plus de 3 000 $">Plus de 3 000 $</option>
+            <option value="À définir ensemble" selected>À définir ensemble</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-delai">Délai souhaité</label>
+          <select id="f-delai">
+            <option value="Urgent (moins de 2 semaines)">Urgent (moins de 2 semaines)</option>
+            <option value="Environ 1 mois">Environ 1 mois</option>
+            <option value="2 à 3 mois">2 à 3 mois</option>
+            <option value="Flexible" selected>Flexible</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f-dispo">Vos disponibilités pour un premier échange</label>
+        <input type="text" id="f-dispo" placeholder="Ex: Lundi ou mardi après-midi">
+      </div>
+
+      <button type="submit" class="btn primary" style="width:100%;justify-content:center;">
+        Envoyer ma demande
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+
+      <p class="form-note">En envoyant ce formulaire, votre messagerie et WhatsApp s'ouvriront avec un message pré-rempli à destination de Ncréa — aucune donnée n'est stockée sur ce site.</p>
+    </form>
+
+    <div class="confirm-panel" id="confirmPanel">
+      <div class="confirm-check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
+      <h3>Demande envoyée</h3>
+      <p class="modal-intro" style="margin-bottom:0;">Voici comment se déroule la suite, étape par étape :</p>
+      <div class="confirm-steps">
+        <div class="confirm-step"><div class="n">1</div><p><b>Étude de votre demande</b> — nous revenons vers vous sous 48h.</p></div>
+        <div class="confirm-step"><div class="n">2</div><p><b>Rendez-vous de cadrage</b> — un échange pour préciser le besoin et discuter du prix.</p></div>
+        <div class="confirm-step"><div class="n">3</div><p><b>Devis & accord</b> — vous validez le périmètre exact et le tarif convenu.</p></div>
+        <div class="confirm-step"><div class="n">4</div><p><b>Acompte de 50 %</b> — réglé à la validation du devis pour lancer la production, le solde étant dû à la livraison finale.</p></div>
+      </div>
+      <button type="button" class="btn ghost" id="confirmCloseBtn" style="margin-top:10px;">Fermer</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+/* ---------- palette / ambient aura ---------- */
+const PALETTE = {
+  visuel: { color:'--visuel', soft:'--visuel-soft', hue:'0deg' },
+  uxui:   { color:'--uxui',   soft:'--uxui-soft',   hue:'150deg' },
+  anim2d: { color:'--anim2d', soft:'--anim2d-soft', hue:'260deg' }
+};
+let currentAxis = 'visuel';
+const root = document.documentElement;
+
+function applyPalette(axis){
+  const data = PALETTE[axis];
+  if(!data) return;
+  root.style.setProperty('--active', 'var(' + data.color + ')');
+  root.style.setProperty('--active-soft', 'var(' + data.soft + ')');
+  root.style.setProperty('--hue-shift', data.hue);
+}
+function setHue(axis){ applyPalette(axis); }
+function resetHue(){ applyPalette(currentAxis); }
+applyPalette(currentAxis);
+
+/* ---------- burger nav ---------- */
+(function(){
+  const burger = document.getElementById('burger');
+  const links = document.getElementById('navLinks');
+  if(burger && links){
+    burger.addEventListener('click', function(){
+      links.classList.toggle('open');
+      burger.classList.toggle('open');
+    });
+    links.querySelectorAll('a').forEach(a=>a.addEventListener('click', ()=>{
+      links.classList.remove('open'); burger.classList.remove('open');
+    }));
+  }
+})();
+
+/* ---------- scroll reveal (isolated, always runs) ---------- */
+try{
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+}catch(err){
+  console.error('Ncréa reveal error:', err);
+  document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
+}
+
+/* ---------- project modal ---------- */
+(function(){
+  const overlay = document.getElementById('projectModalOverlay');
+  if(!overlay) return;
+  const form = document.getElementById('projectForm');
+  const confirmPanel = document.getElementById('confirmPanel');
+  const closeBtn = document.getElementById('modalCloseBtn');
+  const confirmCloseBtn = document.getElementById('confirmCloseBtn');
+
+  window.openProjectModal = function(axis){
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if(axis){
+      const cb = form.querySelector('input[name="axis"][value="' + axisLabel(axis) + '"]');
+      if(cb) cb.checked = true;
+    }
+  };
+  function axisLabel(axis){
+    if(axis === 'visuel') return 'Ncréa-Visuel';
+    if(axis === 'uxui') return 'Ncréa-UX/UI';
+    if(axis === 'anim2d') return 'Ncréa-2D';
+    return axis;
+  }
+  function closeModal(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(()=>{
+      form.classList.remove('hide-form');
+      confirmPanel.classList.remove('show');
+      form.reset();
+    }, 400);
+  }
+  closeBtn.addEventListener('click', closeModal);
+  confirmCloseBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && overlay.classList.contains('open')) closeModal(); });
+
+  document.querySelectorAll('.js-open-project-modal').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      window.openProjectModal(btn.getAttribute('data-axis') || null);
+    });
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const company = document.getElementById('f-company').value;
+    const name = document.getElementById('f-name').value;
+    const email = document.getElementById('f-email').value;
+    const phone = document.getElementById('f-phone').value;
+    const axes = Array.from(form.querySelectorAll('input[name="axis"]:checked')).map(i=>i.value).join(', ') || 'Non précisé';
+    const desc = document.getElementById('f-desc').value;
+    const budget = document.getElementById('f-budget').value;
+    const delai = document.getElementById('f-delai').value;
+    const dispo = document.getElementById('f-dispo').value;
+
+    const subject = 'Nouvelle demande de projet — ' + company;
+    const body =
+      'Entreprise : ' + company + '\n' +
+      'Contact : ' + name + '\n' +
+      'Email : ' + email + '\n' +
+      'Téléphone : ' + (phone || 'Non renseigné') + '\n' +
+      'Axe(s) concerné(s) : ' + axes + '\n' +
+      'Budget approximatif : ' + budget + '\n' +
+      'Délai souhaité : ' + delai + '\n' +
+      'Disponibilités : ' + (dispo || 'Non renseigné') + '\n\n' +
+      'Description du projet :\n' + desc;
+
+    const mailto = 'mailto:otsemstudio@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    const waText = 'Nouvelle demande de projet — ' + company + '\n\n' + body;
+    const whatsapp = 'https://wa.me/250799496971?text=' + encodeURIComponent(waText);
+
+    window.open(whatsapp, '_blank');
+    window.location.href = mailto;
+
+    form.classList.add('hide-form');
+    confirmPanel.classList.add('show');
+  });
+})();
+
+
+(function(){
+  const form = document.getElementById('contactForm');
+  if(!form) return;
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('c-name').value;
+    const email = document.getElementById('c-email').value;
+    const subject = document.getElementById('c-subject').value || 'Message depuis le site Ncréa';
+    const message = document.getElementById('c-message').value;
+    const body = 'Nom : ' + name + '\nEmail : ' + email + '\n\n' + message;
+    const whatsapp = 'https://wa.me/250799496971?text=' + encodeURIComponent(subject + '\n\n' + body);
+    window.open(whatsapp, '_blank');
+    window.location.href = 'mailto:otsemstudio@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    document.getElementById('contactNote').textContent = 'Votre messagerie et WhatsApp ont été ouverts avec le message pré-rempli. Merci, à très vite !';
+  });
+})();
+
+</script>
+
+</body>
+</html>
