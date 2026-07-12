@@ -564,7 +564,7 @@ footer{padding:56px 0 40px;position:relative;}
 /* ---------- backend API ----------
    Renseignez ici l'URL de votre serveur une fois déployé (voir server/README.md).
    Tant que c'est vide, le site utilise automatiquement le repli email/WhatsApp. */
-const API_BASE_URL = ""; // ex: "https://ncrea-server.onrender.com"
+const API_BASE_URL = "https://demoreport.onrender.com"; // ex: "https://ncrea-server.onrender.com"
 
 async function sendToServer(endpoint, payload){
   if(!API_BASE_URL) return { ok:false, reason:'no-api-configured' };
