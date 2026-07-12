@@ -11,6 +11,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const { createClient } = require('@supabase/supabase-js');
+const crypto = require('crypto');
 
 const PORT = process.env.PORT || 3000;
 
@@ -21,6 +23,32 @@ const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
 const RECIPIENT_EMAIL = process.env.RECIPIENT_EMAIL || 'otsemstudio@gmail.com';
 // Numéro qui recevra le SMS, au format international sans "+" pour Africa's Talking (ex: 250799496971)
 const RECIPIENT_PHONE = process.env.RECIPIENT_PHONE || '250799496971';
+
+// ---------- Supabase (base de données + stockage des images du portfolio) ----------
+let supabase = null;
+if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+  supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+}
+const PROJECT_BUCKET = 'project-images';
+
+// ---------- Authentification admin (panneau /admin.html) ----------
+// Simple et proportionné à l'usage : un seul mot de passe, un seul token de session.
+// Le mot de passe n'est jamais stocké côté client ; seul le token (généré aléatoirement
+// à chaque démarrage du serveur, ou fixé via ADMIN_TOKEN) est gardé dans le navigateur
+// après une connexion réussie.
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || null;
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN || crypto.randomBytes(24).toString('hex');
+
+function requireAdmin(req, res, next) {
+  const token = req.headers['x-admin-token'];
+  if (!ADMIN_PASSWORD) {
+    return res.status(503).json({ ok: false, error: 'ADMIN_PASSWORD non configuré côté serveur.' });
+  }
+  if (!token || token !== ADMIN_TOKEN) {
+    return res.status(401).json({ ok: false, error: 'Non autorisé.' });
+  }
+  next();
+}
 
 // ---------- Email (Brevo — API HTTPS, fonctionne même sur les plans gratuits) ----------
 // Les hébergeurs gratuits (Render, Vercel, etc.) bloquent désormais le SMTP classique
@@ -82,7 +110,7 @@ const app = express();
 // Sans ce réglage, express-rate-limit lève une erreur de validation sur l'en-tête X-Forwarded-For.
 app.set('trust proxy', 1);
 
-app.use(express.json({ limit: '100kb' }));
+app.use(express.json({ limit: '15mb' }));
 app.use(
   cors({
     origin: ALLOWED_ORIGIN === '*' ? true : ALLOWED_ORIGIN.split(',').map((s) => s.trim()),
@@ -106,6 +134,126 @@ function isValidEmail(v) {
 }
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));
+
+// ============================================================
+// Portfolio de projets (public en lecture, admin en écriture)
+// ============================================================
+
+function requireSupabase(res) {
+  if (!supabase) {
+    res.status(503).json({ ok: false, error: 'Supabase non configuré côté serveur (SUPABASE_URL / SUPABASE_SERVICE_KEY manquants).' });
+    return false;
+  }
+  return true;
+}
+
+// --- Lecture publique : utilisée par realisations.html ---
+app.get('/api/projects', async (req, res) => {
+  if (!requireSupabase(res)) return;
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: false });
+
+  if (error) return res.status(500).json({ ok: false, error: error.message });
+  res.json({ ok: true, projects: data });
+});
+
+// --- Connexion admin : renvoie le token de session si le mot de passe est correct ---
+app.post('/api/admin/login', (req, res) => {
+  const { password } = req.body || {};
+  if (!ADMIN_PASSWORD) {
+    return res.status(503).json({ ok: false, error: 'ADMIN_PASSWORD non configuré côté serveur.' });
+  }
+  if (password !== ADMIN_PASSWORD) {
+    return res.status(401).json({ ok: false, error: 'Mot de passe incorrect.' });
+  }
+  res.json({ ok: true, token: ADMIN_TOKEN });
+});
+
+// --- Upload d'une image vers Supabase Storage (admin uniquement) ---
+// Attend { fileName, contentType, dataBase64 } — l'image est envoyée encodée en base64.
+app.post('/api/admin/upload', requireAdmin, async (req, res) => {
+  if (!requireSupabase(res)) return;
+  const { fileName, contentType, dataBase64 } = req.body || {};
+  if (!isNonEmptyString(fileName) || !isNonEmptyString(contentType) || !isNonEmptyString(dataBase64)) {
+    return res.status(400).json({ ok: false, error: 'fileName, contentType et dataBase64 sont requis.' });
+  }
+
+  const safeName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
+  const path = `${Date.now()}-${Math.round(Math.random() * 1e6)}-${safeName}`;
+  const buffer = Buffer.from(dataBase64, 'base64');
+
+  const { error: uploadError } = await supabase.storage
+    .from(PROJECT_BUCKET)
+    .upload(path, buffer, { contentType, upsert: false });
+
+  if (uploadError) return res.status(500).json({ ok: false, error: uploadError.message });
+
+  const { data } = supabase.storage.from(PROJECT_BUCKET).getPublicUrl(path);
+  res.json({ ok: true, url: data.publicUrl });
+});
+
+// --- Créer un projet (admin uniquement) ---
+app.post('/api/admin/projects', requireAdmin, async (req, res) => {
+  if (!requireSupabase(res)) return;
+  const { title, axis, why, logo_url, declinations, sketches, process_images, logo_supports, sort_order } = req.body || {};
+
+  if (!isNonEmptyString(title) || !['visuel', 'uxui', 'anim2d'].includes(axis)) {
+    return res.status(400).json({ ok: false, error: 'title et axis (visuel|uxui|anim2d) sont requis.' });
+  }
+
+  const { data, error } = await supabase
+    .from('projects')
+    .insert({
+      title,
+      axis,
+      why: why || '',
+      logo_url: logo_url || null,
+      declinations: declinations || [],
+      sketches: sketches || [],
+      process_images: process_images || [],
+      logo_supports: logo_supports || [],
+      sort_order: Number.isFinite(sort_order) ? sort_order : 0,
+    })
+    .select()
+    .single();
+
+  if (error) return res.status(500).json({ ok: false, error: error.message });
+  res.json({ ok: true, project: data });
+});
+
+// --- Modifier un projet (admin uniquement) ---
+app.put('/api/admin/projects/:id', requireAdmin, async (req, res) => {
+  if (!requireSupabase(res)) return;
+  const { id } = req.params;
+  const { title, axis, why, logo_url, declinations, sketches, process_images, logo_supports, sort_order } = req.body || {};
+
+  const update = {};
+  if (title !== undefined) update.title = title;
+  if (axis !== undefined) update.axis = axis;
+  if (why !== undefined) update.why = why;
+  if (logo_url !== undefined) update.logo_url = logo_url;
+  if (declinations !== undefined) update.declinations = declinations;
+  if (sketches !== undefined) update.sketches = sketches;
+  if (process_images !== undefined) update.process_images = process_images;
+  if (logo_supports !== undefined) update.logo_supports = logo_supports;
+  if (sort_order !== undefined) update.sort_order = sort_order;
+
+  const { data, error } = await supabase.from('projects').update(update).eq('id', id).select().single();
+  if (error) return res.status(500).json({ ok: false, error: error.message });
+  res.json({ ok: true, project: data });
+});
+
+// --- Supprimer un projet (admin uniquement) ---
+app.delete('/api/admin/projects/:id', requireAdmin, async (req, res) => {
+  if (!requireSupabase(res)) return;
+  const { id } = req.params;
+  const { error } = await supabase.from('projects').delete().eq('id', id);
+  if (error) return res.status(500).json({ ok: false, error: error.message });
+  res.json({ ok: true });
+});
 
 // ---------- Formulaire "Démarrer un projet" ----------
 app.post('/api/project-request', submitLimiter, async (req, res) => {

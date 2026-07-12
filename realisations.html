@@ -359,6 +359,34 @@ footer{padding:56px 0 40px;position:relative;}
 }
 
 
+.modal.wide{max-width:920px;}
+.lightbox-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;
+  background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .25s ease;z-index:5;
+}
+.lightbox-arrow:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+.lightbox-arrow svg{width:18px;height:18px;}
+.lightbox-arrow.left{left:-58px;}
+.lightbox-arrow.right{right:-58px;}
+@media(max-width:1040px){
+  .lightbox-arrow.left{left:8px;}
+  .lightbox-arrow.right{right:8px;}
+  .lightbox-arrow{background:rgba(255,255,255,.9);}
+}
+.lb-tag{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;display:inline-block;}
+.lb-tag.c-visuel{color:var(--visuel);}
+.lb-tag.c-uxui{color:var(--uxui);}
+.lb-tag.c-anim2d{color:var(--anim2d);}
+#lbTitle{font-size:28px;margin-bottom:18px;}
+.lb-why{color:var(--ink-soft);font-size:15px;margin-bottom:28px;max-width:640px;}
+.lb-logo-wrap{display:flex;justify-content:center;padding:32px;background:var(--paper);border-radius:var(--radius);margin-bottom:28px;}
+.lb-logo-wrap img{max-height:120px;max-width:220px;object-fit:contain;}
+.lb-gallery-title{font-family:'IBM Plex Mono',monospace;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin:26px 0 12px;}
+.lb-gallery{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;}
+.lb-gallery img{height:150px;width:auto;border-radius:var(--radius-sm);border:1px solid var(--line);object-fit:cover;flex-shrink:0;}
+.lb-cta{margin-top:32px;display:flex;justify-content:center;}
+
 </style>
 </head>
 <body>
@@ -387,7 +415,7 @@ footer{padding:56px 0 40px;position:relative;}
   <div class="wrap reveal in">
     <div class="eyebrow">Réalisations</div>
     <h1>Des projets menés pour des marques panafricaines.</h1>
-    <p>Un aperçu par axe — filtrez pour voir uniquement le Visuel, l'UX/UI ou le 2D.</p>
+    <p>Un aperçu par axe — filtrez, puis cliquez sur un projet pour découvrir son histoire complète.</p>
   </div>
 </section>
 
@@ -402,15 +430,7 @@ footer{padding:56px 0 40px;position:relative;}
       <button class="filter-btn" data-filter="anim2d">Ncréa-2D</button>
     </div>
     <div class="work-grid reveal" id="workGrid">
-      <div class="work-card c-visuel" data-axis="visuel"><div class="bg"></div><span class="k">Ncréa-Visuel</span><h4>Identité — Coopérative Umuganda</h4></div>
-      <div class="work-card c-uxui" data-axis="uxui"><div class="bg"></div><span class="k">Ncréa-UX/UI</span><h4>App mobile — Wave Market</h4></div>
-      <div class="work-card c-anim2d" data-axis="anim2d"><div class="bg"></div><span class="k">Ncréa-2D</span><h4>Motion — Lancement Fintech</h4></div>
-      <div class="work-card c-visuel" data-axis="visuel"><div class="bg"></div><span class="k">Ncréa-Visuel</span><h4>Charte — Groupe Abidjan Textile</h4></div>
-      <div class="work-card c-uxui" data-axis="uxui"><div class="bg"></div><span class="k">Ncréa-UX/UI</span><h4>Design system — HarvestTrack</h4></div>
-      <div class="work-card c-anim2d" data-axis="anim2d"><div class="bg"></div><span class="k">Ncréa-2D</span><h4>Explainer — Assurance santé</h4></div>
-      <div class="work-card c-visuel" data-axis="visuel"><div class="bg"></div><span class="k">Ncréa-Visuel</span><h4>Packaging — Épicerie fine Kigali</h4></div>
-      <div class="work-card c-uxui" data-axis="uxui"><div class="bg"></div><span class="k">Ncréa-UX/UI</span><h4>Site vitrine — Cabinet conseil</h4></div>
-      <div class="work-card c-anim2d" data-axis="anim2d"><div class="bg"></div><span class="k">Ncréa-2D</span><h4>Série sociale — Coopérative agricole</h4></div>
+      <p class="mono" style="color:var(--ink-faint);grid-column:1/-1;">Chargement des réalisations…</p>
     </div>
   </div>
 </section>
@@ -424,6 +444,21 @@ footer{padding:56px 0 40px;position:relative;}
     </div>
   </div>
 </section>
+
+<div class="modal-overlay" id="caseLightbox">
+  <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+    <div class="modal-close" id="lightboxCloseBtn" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </div>
+    <button class="lightbox-arrow left" id="lightboxPrev" aria-label="Projet précédent">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button class="lightbox-arrow right" id="lightboxNext" aria-label="Projet suivant">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <div id="lightboxContent"></div>
+  </div>
+</div>
 
 
 <footer>
@@ -722,16 +757,131 @@ try{
 })();
 
 
+let allProjects = [];
+let filteredProjects = [];
+let currentLightboxIndex = 0;
+
+const AXIS_LABELS = { visuel:'Ncréa-Visuel', uxui:'Ncréa-UX/UI', anim2d:'Ncréa-2D' };
+const AXIS_CLASS = { visuel:'c-visuel', uxui:'c-uxui', anim2d:'c-anim2d' };
+
+function renderWorkGrid(){
+  const grid = document.getElementById('workGrid');
+  if(!filteredProjects.length){
+    grid.innerHTML = '<p class="mono" style="color:var(--ink-faint);grid-column:1/-1;">Aucune réalisation à afficher pour le moment.</p>';
+    return;
+  }
+  grid.innerHTML = filteredProjects.map((p, i)=>
+    '<div class="work-card ' + AXIS_CLASS[p.axis] + '" data-index="' + i + '">' +
+      '<div class="bg" style="' + (p.logo_url ? 'background-image:url(' + p.logo_url + ');background-size:cover;background-position:center;' : '') + '"></div>' +
+      '<span class="k">' + AXIS_LABELS[p.axis] + '</span><h4>' + p.title + '</h4>' +
+    '</div>'
+  ).join('');
+}
+
+function applyFilter(filter){
+  filteredProjects = filter === 'all' ? allProjects.slice() : allProjects.filter(p=>p.axis === filter);
+  renderWorkGrid();
+}
+
+async function loadPortfolio(){
+  const grid = document.getElementById('workGrid');
+  if(!API_BASE_URL){
+    grid.innerHTML = '<p class="mono" style="color:var(--ink-faint);grid-column:1/-1;">Le catalogue de réalisations n\'est pas encore configuré.</p>';
+    return;
+  }
+  try{
+    const res = await fetch(API_BASE_URL + '/api/projects');
+    const data = await res.json();
+    if(!res.ok || data.ok === false) throw new Error(data.error || 'Erreur de chargement');
+    allProjects = data.projects || [];
+    applyFilter('all');
+  }catch(err){
+    console.error('Ncréa portfolio error:', err);
+    grid.innerHTML = '<p class="mono" style="color:var(--ink-faint);grid-column:1/-1;">Impossible de charger les réalisations pour le moment.</p>';
+  }
+}
+
 document.querySelectorAll('.filter-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    const f = btn.dataset.filter;
-    document.querySelectorAll('#workGrid .work-card').forEach(card=>{
-      card.classList.toggle('hidden', f !== 'all' && card.dataset.axis !== f);
-    });
+    applyFilter(btn.dataset.filter);
   });
 });
+
+document.getElementById('workGrid').addEventListener('click', (e)=>{
+  const card = e.target.closest('.work-card');
+  if(!card) return;
+  openLightbox(parseInt(card.dataset.index, 10));
+});
+
+function galleryHtml(title, urls){
+  if(!urls || !urls.length) return '';
+  return '<div class="lb-gallery-title">' + title + '</div><div class="lb-gallery">' +
+    urls.map(u=>'<img src="' + u + '" loading="lazy">').join('') + '</div>';
+}
+
+function renderLightbox(){
+  const p = filteredProjects[currentLightboxIndex];
+  if(!p) return;
+  const content = document.getElementById('lightboxContent');
+  content.innerHTML =
+    '<span class="lb-tag ' + AXIS_CLASS[p.axis] + '">' + AXIS_LABELS[p.axis] + '</span>' +
+    '<h3 id="lbTitle">' + p.title + '</h3>' +
+    '<p class="lb-why">' + (p.why || '') + '</p>' +
+    (p.logo_url ? '<div class="lb-logo-wrap"><img src="' + p.logo_url + '"></div>' : '') +
+    galleryHtml('Déclinaisons', p.declinations) +
+    galleryHtml('Croquis & esquisses', p.sketches) +
+    galleryHtml('Processus de création', p.process_images) +
+    galleryHtml('Le logo sur différents supports', p.logo_supports) +
+    '<div class="lb-cta"><button class="btn primary js-open-project-modal" data-axis="' + p.axis + '">Démarrer un projet ' + AXIS_LABELS[p.axis] + '</button></div>';
+}
+
+function openLightbox(index){
+  currentLightboxIndex = index;
+  renderLightbox();
+  const overlay = document.getElementById('caseLightbox');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox(){
+  document.getElementById('caseLightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function showPrev(){
+  currentLightboxIndex = (currentLightboxIndex - 1 + filteredProjects.length) % filteredProjects.length;
+  renderLightbox();
+}
+function showNext(){
+  currentLightboxIndex = (currentLightboxIndex + 1) % filteredProjects.length;
+  renderLightbox();
+}
+
+document.getElementById('lightboxCloseBtn').addEventListener('click', closeLightbox);
+document.getElementById('lightboxPrev').addEventListener('click', showPrev);
+document.getElementById('lightboxNext').addEventListener('click', showNext);
+document.getElementById('caseLightbox').addEventListener('click', (e)=>{
+  if(e.target.id === 'caseLightbox') closeLightbox();
+});
+document.addEventListener('keydown', (e)=>{
+  const overlay = document.getElementById('caseLightbox');
+  if(!overlay.classList.contains('open')) return;
+  if(e.key === 'Escape') closeLightbox();
+  if(e.key === 'ArrowLeft') showPrev();
+  if(e.key === 'ArrowRight') showNext();
+});
+
+/* Les boutons "Démarrer un projet" injectés dynamiquement dans la lightbox doivent
+   aussi ouvrir la modale de démarrage de projet — on délègue l'écoute au document. */
+document.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.js-open-project-modal');
+  if(btn && btn.closest('#lightboxContent') && window.openProjectModal){
+    e.preventDefault();
+    window.openProjectModal(btn.getAttribute('data-axis') || null);
+  }
+});
+
+loadPortfolio();
 
 </script>
 

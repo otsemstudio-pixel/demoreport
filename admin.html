@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Ncréa — Administration du portfolio</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --bg:#ffffff; --paper:#FAF9F6; --ink:#15161A; --ink-soft:#5B5D63; --ink-faint:#9A9C9F; --line:#E9E4D9;
+  --visuel:#C2672B; --uxui:#2E3A78; --anim2d:#0E7C57;
+  --radius:14px; --radius-sm:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
+h1,h2{font-family:'Fraunces',serif;font-weight:700;}
+.mono{font-family:'IBM Plex Mono',monospace;}
+.wrap{max-width:960px;margin:0 auto;padding:48px 24px 100px;}
+
+/* login */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.login-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:40px;max-width:380px;width:100%;box-shadow:0 20px 50px -20px rgba(0,0,0,.15);}
+.login-card h1{font-size:24px;margin-bottom:8px;}
+.login-card p{color:var(--ink-soft);font-size:13.5px;margin-bottom:24px;}
+
+input, select, textarea{
+  width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius-sm);
+  font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);background:#fff;
+}
+input:focus, select:focus, textarea:focus{outline:none;border-color:var(--ink);}
+label{display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);margin-bottom:6px;}
+.field{margin-bottom:18px;}
+
+button{font:inherit;cursor:pointer;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border:1px solid var(--ink);border-radius:8px;background:var(--ink);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:13px;transition:opacity .2s ease;}
+.btn:hover{opacity:.85;}
+.btn.ghost{background:none;color:var(--ink);}
+.btn.danger{background:#B3261E;border-color:#B3261E;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.btn.full{width:100%;justify-content:center;}
+.error-msg{color:#B3261E;font-size:13px;margin-top:10px;}
+.ok-msg{color:var(--anim2d);font-size:13px;margin-top:10px;}
+
+/* app shell */
+#app{display:none;}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar .logo{font-family:'Fraunces',serif;font-weight:700;font-size:20px;}
+.topbar .logo span{color:var(--visuel);}
+
+.section-title{font-size:22px;margin:36px 0 18px;}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px;margin-bottom:20px;}
+
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:640px){.field-row{grid-template-columns:1fr;}}
+
+.axis-pills{display:flex;gap:8px;flex-wrap:wrap;}
+.axis-pill{position:relative;}
+.axis-pill input{position:absolute;opacity:0;width:0;height:0;}
+.axis-pill span{display:inline-flex;padding:9px 16px;border:1px solid var(--line);border-radius:999px;font-size:13px;cursor:pointer;font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);transition:all .2s ease;}
+.axis-pill input:checked + span{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+.upload-zone{border:1.5px dashed var(--line);border-radius:var(--radius-sm);padding:20px;text-align:center;cursor:pointer;transition:border-color .2s ease;position:relative;}
+.upload-zone:hover{border-color:var(--ink);}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.upload-zone .hint{font-size:12.5px;color:var(--ink-faint);}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.thumb{position:relative;width:70px;height:70px;border-radius:8px;overflow:hidden;border:1px solid var(--line);}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.thumb .rm{position:absolute;top:2px;right:2px;width:18px;height:18px;background:rgba(0,0,0,.6);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;}
+.thumb.uploading{display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--ink-faint);background:var(--paper);}
+
+/* project list */
+.proj-row{display:flex;align-items:center;gap:16px;padding:16px;border:1px solid var(--line);border-radius:var(--radius-sm);margin-bottom:10px;background:#fff;}
+.proj-row img{width:52px;height:52px;border-radius:8px;object-fit:cover;background:var(--paper);flex-shrink:0;}
+.proj-row .info{flex:1;min-width:0;}
+.proj-row .info b{display:block;font-size:14.5px;}
+.proj-row .info span{font-size:12px;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;}
+.proj-row .actions{display:flex;gap:8px;flex-shrink:0;}
+.proj-row .actions button{padding:8px 14px;font-size:12px;border-radius:6px;border:1px solid var(--line);background:#fff;}
+.proj-row .actions button:hover{background:var(--paper);}
+
+.empty-state{color:var(--ink-faint);font-size:14px;padding:20px;text-align:center;}
+#statusBar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;font-size:13px;font-family:'IBM Plex Mono',monospace;opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:100;}
+#statusBar.show{opacity:1;}
+#statusBar.error{background:#B3261E;}
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div id="loginScreen">
+  <div class="login-card">
+    <h1>Ncréa — Admin</h1>
+    <p>Accès réservé. Entrez le mot de passe administrateur.</p>
+    <div class="field">
+      <label for="loginPassword">Mot de passe</label>
+      <input type="password" id="loginPassword" placeholder="••••••••">
+    </div>
+    <button class="btn full" id="loginBtn">Se connecter</button>
+    <div class="error-msg" id="loginError" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="app">
+  <div class="topbar">
+    <div class="logo">Ncréa<span>.</span> — Admin portfolio</div>
+    <button class="btn ghost" id="logoutBtn">Se déconnecter</button>
+  </div>
+
+  <div class="wrap">
+    <h2 class="section-title">Ajouter un projet</h2>
+    <div class="card">
+      <form id="projectForm">
+        <input type="hidden" id="editingId" value="">
+
+        <div class="field-row">
+          <div class="field">
+            <label for="p-title">Nom du projet</label>
+            <input type="text" id="p-title" required placeholder="Ex: Identité — Coopérative Umuganda">
+          </div>
+          <div class="field">
+            <label>Axe</label>
+            <div class="axis-pills">
+              <label class="axis-pill"><input type="radio" name="p-axis" value="visuel" checked><span>Ncréa-Visuel</span></label>
+              <label class="axis-pill"><input type="radio" name="p-axis" value="uxui"><span>Ncréa-UX/UI</span></label>
+              <label class="axis-pill"><input type="radio" name="p-axis" value="anim2d"><span>Ncréa-2D</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="p-why">Pourquoi ce projet existe (contexte, besoin du client)</label>
+          <textarea id="p-why" rows="4" required placeholder="Expliquez le contexte et l'objectif du projet..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Logo du projet (une seule image)</label>
+          <div class="upload-zone" data-target="logo_url" data-multi="false">
+            <input type="file" accept="image/*">
+            <div class="hint">Cliquez ou déposez une image ici</div>
+          </div>
+          <div class="thumbs" id="thumbs-logo_url"></div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Déclinaisons du logo</label>
+            <div class="upload-zone" data-target="declinations" data-multi="true">
+              <input type="file" accept="image/*" multiple>
+              <div class="hint">Plusieurs images possibles</div>
+            </div>
+            <div class="thumbs" id="thumbs-declinations"></div>
+          </div>
+          <div class="field">
+            <label>Croquis / esquisses</label>
+            <div class="upload-zone" data-target="sketches" data-multi="true">
+              <input type="file" accept="image/*" multiple>
+              <div class="hint">Plusieurs images possibles</div>
+            </div>
+            <div class="thumbs" id="thumbs-sketches"></div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Images du processus (recherches, étapes)</label>
+            <div class="upload-zone" data-target="process_images" data-multi="true">
+              <input type="file" accept="image/*" multiple>
+              <div class="hint">Plusieurs images possibles</div>
+            </div>
+            <div class="thumbs" id="thumbs-process_images"></div>
+          </div>
+          <div class="field">
+            <label>Logo sur différents supports</label>
+            <div class="upload-zone" data-target="logo_supports" data-multi="true">
+              <input type="file" accept="image/*" multiple>
+              <div class="hint">Plusieurs images possibles</div>
+            </div>
+            <div class="thumbs" id="thumbs-logo_supports"></div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn full" id="submitBtn">Enregistrer le projet</button>
+        <button type="button" class="btn ghost full" id="cancelEditBtn" style="display:none;margin-top:8px;">Annuler la modification</button>
+      </form>
+    </div>
+
+    <h2 class="section-title">Projets existants</h2>
+    <div id="projectsList"><div class="empty-state">Chargement…</div></div>
+  </div>
+</div>
+
+<div id="statusBar"></div>
+
+<script>
+/* ⚠️ Renseignez ici l'URL de votre serveur backend (même valeur que dans les fichiers du site public). */
+const API_BASE_URL = "https://demoreport.onrender.com"; // ex: "https://demoreport.onrender.com"
+
+const AXIS_LABELS = { visuel: 'Ncréa-Visuel', uxui: 'Ncréa-UX/UI', anim2d: 'Ncréa-2D' };
+let adminToken = localStorage.getItem('ncrea_admin_token') || '';
+let currentUploads = { logo_url: null, declinations: [], sketches: [], process_images: [], logo_supports: [] };
+let allProjects = [];
+
+function showStatus(msg, isError){
+  const bar = document.getElementById('statusBar');
+  bar.textContent = msg;
+  bar.classList.toggle('error', !!isError);
+  bar.classList.add('show');
+  setTimeout(()=>bar.classList.remove('show'), 3500);
+}
+
+function apiFetch(path, options){
+  options = options || {};
+  options.headers = Object.assign({ 'Content-Type': 'application/json' }, options.headers || {});
+  if(adminToken) options.headers['x-admin-token'] = adminToken;
+  return fetch(API_BASE_URL + path, options).then(async (res)=>{
+    const data = await res.json().catch(()=>({}));
+    if(!res.ok || data.ok === false) throw new Error(data.error || ('Erreur ' + res.status));
+    return data;
+  });
+}
+
+/* ---------- Login ---------- */
+function tryEnterApp(){
+  if(!adminToken) return;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadProjects();
+}
+
+document.getElementById('loginBtn').addEventListener('click', async ()=>{
+  const password = document.getElementById('loginPassword').value;
+  const errBox = document.getElementById('loginError');
+  errBox.style.display = 'none';
+  if(!API_BASE_URL){
+    errBox.textContent = "API_BASE_URL n'est pas renseigné dans ce fichier.";
+    errBox.style.display = 'block';
+    return;
+  }
+  try{
+    const data = await apiFetch('/api/admin/login', { method:'POST', body: JSON.stringify({ password }) });
+    adminToken = data.token;
+    localStorage.setItem('ncrea_admin_token', adminToken);
+    tryEnterApp();
+  }catch(err){
+    errBox.textContent = err.message;
+    errBox.style.display = 'block';
+  }
+});
+document.getElementById('loginPassword').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') document.getElementById('loginBtn').click();
+});
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  localStorage.removeItem('ncrea_admin_token');
+  location.reload();
+});
+
+tryEnterApp();
+
+/* ---------- Upload d'images ---------- */
+function fileToBase64(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderThumbs(target){
+  const box = document.getElementById('thumbs-' + target);
+  box.innerHTML = '';
+  const value = currentUploads[target];
+  const urls = Array.isArray(value) ? value : (value ? [value] : []);
+  urls.forEach((url, idx)=>{
+    const div = document.createElement('div');
+    div.className = 'thumb';
+    div.innerHTML = '<img src="' + url + '"><div class="rm" data-target="' + target + '" data-idx="' + idx + '">×</div>';
+    box.appendChild(div);
+  });
+}
+
+document.querySelectorAll('.upload-zone').forEach(zone=>{
+  const target = zone.dataset.target;
+  const multi = zone.dataset.multi === 'true';
+  const input = zone.querySelector('input[type="file"]');
+
+  input.addEventListener('change', async ()=>{
+    const files = Array.from(input.files || []);
+    for(const file of files){
+      const loadingDiv = document.createElement('div');
+      loadingDiv.className = 'thumb uploading';
+      loadingDiv.textContent = '...';
+      document.getElementById('thumbs-' + target).appendChild(loadingDiv);
+      try{
+        const base64 = await fileToBase64(file);
+        const data = await apiFetch('/api/admin/upload', {
+          method:'POST',
+          body: JSON.stringify({ fileName: file.name, contentType: file.type, dataBase64: base64 })
+        });
+        if(multi){ currentUploads[target].push(data.url); }
+        else { currentUploads[target] = data.url; }
+        renderThumbs(target);
+      }catch(err){
+        showStatus("Erreur d'upload : " + err.message, true);
+        loadingDiv.remove();
+      }
+    }
+    input.value = '';
+  });
+});
+
+document.addEventListener('click', (e)=>{
+  if(e.target.classList.contains('rm')){
+    const target = e.target.dataset.target;
+    const idx = parseInt(e.target.dataset.idx, 10);
+    if(Array.isArray(currentUploads[target])) currentUploads[target].splice(idx, 1);
+    else currentUploads[target] = null;
+    renderThumbs(target);
+  }
+});
+
+/* ---------- Formulaire projet (création / édition) ---------- */
+function resetForm(){
+  document.getElementById('projectForm').reset();
+  document.getElementById('editingId').value = '';
+  document.getElementById('submitBtn').textContent = 'Enregistrer le projet';
+  document.getElementById('cancelEditBtn').style.display = 'none';
+  currentUploads = { logo_url: null, declinations: [], sketches: [], process_images: [], logo_supports: [] };
+  ['logo_url','declinations','sketches','process_images','logo_supports'].forEach(renderThumbs);
+}
+
+document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+document.getElementById('projectForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
+
+  const editingId = document.getElementById('editingId').value;
+  const payload = {
+    title: document.getElementById('p-title').value,
+    axis: document.querySelector('input[name="p-axis"]:checked').value,
+    why: document.getElementById('p-why').value,
+    logo_url: currentUploads.logo_url,
+    declinations: currentUploads.declinations,
+    sketches: currentUploads.sketches,
+    process_images: currentUploads.process_images,
+    logo_supports: currentUploads.logo_supports,
+  };
+
+  try{
+    if(editingId){
+      await apiFetch('/api/admin/projects/' + editingId, { method:'PUT', body: JSON.stringify(payload) });
+      showStatus('Projet mis à jour.');
+    }else{
+      await apiFetch('/api/admin/projects', { method:'POST', body: JSON.stringify(payload) });
+      showStatus('Projet ajouté.');
+    }
+    resetForm();
+    loadProjects();
+  }catch(err){
+    showStatus('Erreur : ' + err.message, true);
+  }
+  submitBtn.disabled = false;
+});
+
+/* ---------- Liste des projets ---------- */
+async function loadProjects(){
+  const listBox = document.getElementById('projectsList');
+  try{
+    const data = await apiFetch('/api/projects');
+    allProjects = data.projects || [];
+    if(!allProjects.length){
+      listBox.innerHTML = '<div class="empty-state">Aucun projet pour le moment.</div>';
+      return;
+    }
+    listBox.innerHTML = '';
+    allProjects.forEach(p=>{
+      const row = document.createElement('div');
+      row.className = 'proj-row';
+      row.innerHTML =
+        '<img src="' + (p.logo_url || '') + '" onerror="this.style.visibility=\'hidden\'">' +
+        '<div class="info"><b>' + p.title + '</b><span>' + (AXIS_LABELS[p.axis] || p.axis) + '</span></div>' +
+        '<div class="actions">' +
+          '<button data-action="edit" data-id="' + p.id + '">Modifier</button>' +
+          '<button data-action="delete" data-id="' + p.id + '">Supprimer</button>' +
+        '</div>';
+      listBox.appendChild(row);
+    });
+  }catch(err){
+    listBox.innerHTML = '<div class="empty-state">Erreur de chargement : ' + err.message + '</div>';
+  }
+}
+
+document.getElementById('projectsList').addEventListener('click', async (e)=>{
+  const btn = e.target.closest('button[data-action]');
+  if(!btn) return;
+  const id = btn.dataset.id;
+  const project = allProjects.find(p=>p.id === id);
+  if(!project) return;
+
+  if(btn.dataset.action === 'edit'){
+    document.getElementById('editingId').value = project.id;
+    document.getElementById('p-title').value = project.title;
+    document.querySelector('input[name="p-axis"][value="' + project.axis + '"]').checked = true;
+    document.getElementById('p-why').value = project.why || '';
+    currentUploads = {
+      logo_url: project.logo_url || null,
+      declinations: project.declinations || [],
+      sketches: project.sketches || [],
+      process_images: project.process_images || [],
+      logo_supports: project.logo_supports || [],
+    };
+    ['logo_url','declinations','sketches','process_images','logo_supports'].forEach(renderThumbs);
+    document.getElementById('submitBtn').textContent = 'Mettre à jour le projet';
+    document.getElementById('cancelEditBtn').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if(btn.dataset.action === 'delete'){
+    if(!confirm('Supprimer définitivement "' + project.title + '" ?')) return;
+    try{
+      await apiFetch('/api/admin/projects/' + id, { method:'DELETE' });
+      showStatus('Projet supprimé.');
+      loadProjects();
+    }catch(err){
+      showStatus('Erreur : ' + err.message, true);
+    }
+  }
+});
+</script>
+</body>
+</html>
