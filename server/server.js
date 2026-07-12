@@ -11,7 +11,6 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
-const nodemailer = require('nodemailer');
 
 const PORT = process.env.PORT || 3000;
 
@@ -23,26 +22,37 @@ const RECIPIENT_EMAIL = process.env.RECIPIENT_EMAIL || 'otsemstudio@gmail.com';
 // Numéro qui recevra le SMS, au format international sans "+" pour Africa's Talking (ex: 250799496971)
 const RECIPIENT_PHONE = process.env.RECIPIENT_PHONE || '250799496971';
 
-// ---------- Email (Gmail via Nodemailer) ----------
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD, // "mot de passe d'application" Google, pas le mot de passe normal
-  },
-});
-
+// ---------- Email (Brevo — API HTTPS, fonctionne même sur les plans gratuits) ----------
+// Les hébergeurs gratuits (Render, Vercel, etc.) bloquent désormais le SMTP classique
+// (ports 25/465/587). Brevo envoie via une requête HTTPS normale (port 443), donc ça
+// fonctionne sans upgrade payant. Voir server/README.md pour la configuration.
 async function sendEmail({ subject, text, replyTo }) {
-  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
-    throw new Error('GMAIL_USER / GMAIL_APP_PASSWORD manquants dans .env');
+  if (!process.env.BREVO_API_KEY || !process.env.BREVO_SENDER_EMAIL) {
+    throw new Error('BREVO_API_KEY / BREVO_SENDER_EMAIL manquants dans .env');
   }
-  return transporter.sendMail({
-    from: `"Site Ncréa" <${process.env.GMAIL_USER}>`,
-    to: RECIPIENT_EMAIL,
-    replyTo: replyTo || undefined, // permet de cliquer "Répondre" et écrire directement au client
-    subject,
-    text,
+
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+      'api-key': process.env.BREVO_API_KEY,
+    },
+    body: JSON.stringify({
+      sender: { name: 'Site Ncréa', email: process.env.BREVO_SENDER_EMAIL },
+      to: [{ email: RECIPIENT_EMAIL }],
+      replyTo: replyTo ? { email: replyTo } : undefined,
+      subject,
+      textContent: text,
+    }),
   });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => '');
+    throw new Error(`Brevo a refusé l'envoi (${res.status}): ${errText}`);
+  }
+
+  return res.json();
 }
 
 // ---------- SMS (Africa's Talking) ----------
@@ -67,6 +77,11 @@ async function sendSms(message) {
 
 // ---------- App ----------
 const app = express();
+
+// Render (et la plupart des hébergeurs) placent l'app derrière un proxy inverse.
+// Sans ce réglage, express-rate-limit lève une erreur de validation sur l'en-tête X-Forwarded-For.
+app.set('trust proxy', 1);
+
 app.use(express.json({ limit: '100kb' }));
 app.use(
   cors({
