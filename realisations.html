@@ -381,7 +381,8 @@ footer{padding:56px 0 40px;position:relative;}
 #lbTitle{font-size:28px;margin-bottom:18px;}
 .lb-why{color:var(--ink-soft);font-size:15px;margin-bottom:28px;max-width:640px;}
 .lb-logo-wrap{display:flex;justify-content:center;padding:32px;background:var(--paper);border-radius:var(--radius);margin-bottom:28px;}
-.lb-logo-wrap img{max-height:120px;max-width:220px;object-fit:contain;}
+.lb-logo-wrap img{max-height:340px;max-width:100%;width:auto;object-fit:contain;}
+@media(max-width:640px){.lb-logo-wrap img{max-height:220px;}}
 .lb-gallery-title{font-family:'IBM Plex Mono',monospace;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin:26px 0 12px;}
 .lb-gallery{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;}
 .lb-gallery img{height:150px;width:auto;border-radius:var(--radius-sm);border:1px solid var(--line);object-fit:cover;flex-shrink:0;}
