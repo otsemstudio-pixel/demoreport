@@ -437,7 +437,7 @@ footer{padding:56px 0 40px;position:relative;}
           Envoyer le message
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </button>
-        <p class="form-note" id="contactNote">En envoyant ce formulaire, votre messagerie et WhatsApp s'ouvriront avec un message pré-rempli à destination de Ncréa — aucune donnée n'est stockée sur ce site.</p>
+        <p class="form-note" id="contactNote">Votre message est transmis directement à Ncréa. Si le service est momentanément indisponible, votre messagerie et WhatsApp s'ouvriront en secours — aucune donnée n'est stockée sur ce site.</p>
       </form>
     </div>
   </div>
@@ -558,7 +558,7 @@ footer{padding:56px 0 40px;position:relative;}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </button>
 
-      <p class="form-note">En envoyant ce formulaire, votre messagerie et WhatsApp s'ouvriront avec un message pré-rempli à destination de Ncréa — aucune donnée n'est stockée sur ce site.</p>
+      <p class="form-note">Votre demande est transmise directement à Ncréa (email + SMS). Si le service est momentanément indisponible, votre messagerie ou WhatsApp s'ouvriront en secours — aucune donnée n'est stockée sur ce site.</p>
     </form>
 
     <div class="confirm-panel" id="confirmPanel">
@@ -578,6 +578,27 @@ footer{padding:56px 0 40px;position:relative;}
 
 
 <script>
+
+/* ---------- backend API ----------
+   Renseignez ici l'URL de votre serveur une fois déployé (voir server/README.md).
+   Tant que c'est vide, le site utilise automatiquement le repli email/WhatsApp. */
+const API_BASE_URL = ""; // ex: "https://ncrea-server.onrender.com"
+
+async function sendToServer(endpoint, payload){
+  if(!API_BASE_URL) return { ok:false, reason:'no-api-configured' };
+  try{
+    const res = await fetch(API_BASE_URL + endpoint, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json().catch(()=>({}));
+    return { ok: res.ok && data.ok !== false, data };
+  }catch(err){
+    console.error('Ncréa API error:', err);
+    return { ok:false, reason:'network-error' };
+  }
+}
 
 /* ---------- palette / ambient aura ---------- */
 const PALETTE = {
@@ -669,37 +690,50 @@ try{
     });
   });
 
-  form.addEventListener('submit', function(e){
+  form.addEventListener('submit', async function(e){
     e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if(submitBtn){ submitBtn.disabled = true; submitBtn.style.opacity = '.6'; }
+
     const company = document.getElementById('f-company').value;
     const name = document.getElementById('f-name').value;
     const email = document.getElementById('f-email').value;
     const phone = document.getElementById('f-phone').value;
-    const axes = Array.from(form.querySelectorAll('input[name="axis"]:checked')).map(i=>i.value).join(', ') || 'Non précisé';
+    const axesList = Array.from(form.querySelectorAll('input[name="axis"]:checked')).map(i=>i.value);
+    const axes = axesList.join(', ') || 'Non précisé';
     const desc = document.getElementById('f-desc').value;
     const budget = document.getElementById('f-budget').value;
     const delai = document.getElementById('f-delai').value;
     const dispo = document.getElementById('f-dispo').value;
 
-    const subject = 'Nouvelle demande de projet — ' + company;
-    const body =
-      'Entreprise : ' + company + '\n' +
-      'Contact : ' + name + '\n' +
-      'Email : ' + email + '\n' +
-      'Téléphone : ' + (phone || 'Non renseigné') + '\n' +
-      'Axe(s) concerné(s) : ' + axes + '\n' +
-      'Budget approximatif : ' + budget + '\n' +
-      'Délai souhaité : ' + delai + '\n' +
-      'Disponibilités : ' + (dispo || 'Non renseigné') + '\n\n' +
-      'Description du projet :\n' + desc;
+    const result = await sendToServer('/api/project-request', {
+      company, name, email, phone, axes: axesList, description: desc, budget, delai, dispo
+    });
 
-    const mailto = 'mailto:otsemstudio@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-    const waText = 'Nouvelle demande de projet — ' + company + '\n\n' + body;
-    const whatsapp = 'https://wa.me/250799496971?text=' + encodeURIComponent(waText);
+    if(!result.ok){
+      /* Repli : le serveur n'est pas encore configuré / injoignable —
+         on ouvre la messagerie et WhatsApp du visiteur comme avant. */
+      const subject = 'Nouvelle demande de projet — ' + company;
+      const body =
+        'Entreprise : ' + company + '\n' +
+        'Contact : ' + name + '\n' +
+        'Email : ' + email + '\n' +
+        'Téléphone : ' + (phone || 'Non renseigné') + '\n' +
+        'Axe(s) concerné(s) : ' + axes + '\n' +
+        'Budget approximatif : ' + budget + '\n' +
+        'Délai souhaité : ' + delai + '\n' +
+        'Disponibilités : ' + (dispo || 'Non renseigné') + '\n\n' +
+        'Description du projet :\n' + desc;
 
-    window.open(whatsapp, '_blank');
-    window.location.href = mailto;
+      const mailto = 'mailto:otsemstudio@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      const waText = 'Nouvelle demande de projet — ' + company + '\n\n' + body;
+      const whatsapp = 'https://wa.me/250799496971?text=' + encodeURIComponent(waText);
 
+      window.open(whatsapp, '_blank');
+      window.location.href = mailto;
+    }
+
+    if(submitBtn){ submitBtn.disabled = false; submitBtn.style.opacity = ''; }
     form.classList.add('hide-form');
     confirmPanel.classList.add('show');
   });
@@ -709,17 +743,30 @@ try{
 (function(){
   const form = document.getElementById('contactForm');
   if(!form) return;
-  form.addEventListener('submit', function(e){
+  form.addEventListener('submit', async function(e){
     e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if(submitBtn){ submitBtn.disabled = true; submitBtn.style.opacity = '.6'; }
+
     const name = document.getElementById('c-name').value;
     const email = document.getElementById('c-email').value;
     const subject = document.getElementById('c-subject').value || 'Message depuis le site Ncréa';
     const message = document.getElementById('c-message').value;
-    const body = 'Nom : ' + name + '\nEmail : ' + email + '\n\n' + message;
-    const whatsapp = 'https://wa.me/250799496971?text=' + encodeURIComponent(subject + '\n\n' + body);
-    window.open(whatsapp, '_blank');
-    window.location.href = 'mailto:otsemstudio@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-    document.getElementById('contactNote').textContent = 'Votre messagerie et WhatsApp ont été ouverts avec le message pré-rempli. Merci, à très vite !';
+
+    const result = await sendToServer('/api/contact-message', { name, email, subject, message });
+
+    if(result.ok){
+      document.getElementById('contactNote').textContent = 'Message envoyé — vous recevrez une réponse par email très vite. Merci !';
+      form.reset();
+    }else{
+      const body = 'Nom : ' + name + '\nEmail : ' + email + '\n\n' + message;
+      const whatsapp = 'https://wa.me/250799496971?text=' + encodeURIComponent(subject + '\n\n' + body);
+      window.open(whatsapp, '_blank');
+      window.location.href = 'mailto:otsemstudio@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      document.getElementById('contactNote').textContent = 'Votre messagerie et WhatsApp ont été ouverts avec le message pré-rempli. Merci, à très vite !';
+    }
+
+    if(submitBtn){ submitBtn.disabled = false; submitBtn.style.opacity = ''; }
   });
 })();
 
