@@ -381,11 +381,16 @@ footer{padding:56px 0 40px;position:relative;}
 #lbTitle{font-size:28px;margin-bottom:18px;}
 .lb-why{color:var(--ink-soft);font-size:15px;margin-bottom:28px;max-width:640px;}
 .lb-logo-wrap{display:flex;justify-content:center;padding:32px;background:var(--paper);border-radius:var(--radius);margin-bottom:28px;}
-.lb-logo-wrap img{max-height:340px;max-width:100%;width:auto;object-fit:contain;}
-@media(max-width:640px){.lb-logo-wrap img{max-height:220px;}}
+.lb-logo-wrap img{height:340px;max-width:100%;width:auto;object-fit:contain;}
+@media(max-width:640px){.lb-logo-wrap img{height:220px;}}
 .lb-gallery-title{font-family:'IBM Plex Mono',monospace;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin:26px 0 12px;}
 .lb-gallery{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;}
 .lb-gallery img{height:150px;width:auto;border-radius:var(--radius-sm);border:1px solid var(--line);object-fit:cover;flex-shrink:0;}
+.lb-video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;}
+.lb-video-item{display:flex;flex-direction:column;gap:8px;}
+.lb-video-item iframe{width:100%;aspect-ratio:16/9;border:none;border-radius:var(--radius-sm);border:1px solid var(--line);}
+.lb-video-link{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-faint);display:inline-flex;align-items:center;gap:4px;transition:color .2s ease;}
+.lb-video-link:hover{color:var(--active);}
 .lb-cta{margin-top:32px;display:flex;justify-content:center;}
 
 </style>
@@ -822,6 +827,26 @@ function galleryHtml(title, urls){
     urls.map(u=>'<img src="' + u + '" loading="lazy">').join('') + '</div>';
 }
 
+function extractYouTubeId(url){
+  if(!url) return null;
+  const m = url.match(/(?:youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+function videoGalleryHtml(urls){
+  if(!urls || !urls.length) return '';
+  const items = urls.map(u=>{
+    const id = extractYouTubeId(u);
+    if(!id) return '';
+    return '<div class="lb-video-item">' +
+      '<iframe src="https://www.youtube.com/embed/' + id + '" title="Vidéo du projet" allowfullscreen loading="lazy"></iframe>' +
+      '<a class="lb-video-link" href="' + u + '" target="_blank" rel="noopener">Voir sur YouTube ↗</a>' +
+      '</div>';
+  }).join('');
+  if(!items) return '';
+  return '<div class="lb-gallery-title">Vidéos</div><div class="lb-video-grid">' + items + '</div>';
+}
+
 function renderLightbox(){
   const p = filteredProjects[currentLightboxIndex];
   if(!p) return;
@@ -831,6 +856,7 @@ function renderLightbox(){
     '<h3 id="lbTitle">' + p.title + '</h3>' +
     '<p class="lb-why">' + (p.why || '') + '</p>' +
     (p.logo_url ? '<div class="lb-logo-wrap"><img src="' + p.logo_url + '"></div>' : '') +
+    videoGalleryHtml(p.videos) +
     galleryHtml('Déclinaisons', p.declinations) +
     galleryHtml('Croquis & esquisses', p.sketches) +
     galleryHtml('Processus de création', p.process_images) +

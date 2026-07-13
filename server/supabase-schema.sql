@@ -15,6 +15,7 @@ create table if not exists projects (
   sketches text[] not null default '{}',
   process_images text[] not null default '{}',
   logo_supports text[] not null default '{}',
+  videos text[] not null default '{}',
   sort_order integer not null default 0,
   created_at timestamptz not null default now()
 );
@@ -36,4 +37,11 @@ create policy "Public read access"
 -- Bucket de stockage pour les images des projets
 -- À créer manuellement : Storage → New bucket → nom "project-images" → Public bucket: ON
 -- (Le bucket lui-même s'occupe de la lecture publique des images une fois créé "public".)
+-- ============================================================
+
+-- ============================================================
+-- MIGRATION : si votre table "projects" existe déjà (créée avant l'ajout des vidéos),
+-- exécutez uniquement cette ligne dans le SQL Editor pour ajouter la colonne manquante :
+--
+-- alter table projects add column if not exists videos text[] not null default '{}';
 -- ============================================================

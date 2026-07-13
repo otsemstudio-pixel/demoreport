@@ -198,7 +198,7 @@ app.post('/api/admin/upload', requireAdmin, async (req, res) => {
 // --- Créer un projet (admin uniquement) ---
 app.post('/api/admin/projects', requireAdmin, async (req, res) => {
   if (!requireSupabase(res)) return;
-  const { title, axis, why, logo_url, declinations, sketches, process_images, logo_supports, sort_order } = req.body || {};
+  const { title, axis, why, logo_url, declinations, sketches, process_images, logo_supports, videos, sort_order } = req.body || {};
 
   if (!isNonEmptyString(title) || !['visuel', 'uxui', 'anim2d'].includes(axis)) {
     return res.status(400).json({ ok: false, error: 'title et axis (visuel|uxui|anim2d) sont requis.' });
@@ -215,6 +215,7 @@ app.post('/api/admin/projects', requireAdmin, async (req, res) => {
       sketches: sketches || [],
       process_images: process_images || [],
       logo_supports: logo_supports || [],
+      videos: videos || [],
       sort_order: Number.isFinite(sort_order) ? sort_order : 0,
     })
     .select()
@@ -228,7 +229,7 @@ app.post('/api/admin/projects', requireAdmin, async (req, res) => {
 app.put('/api/admin/projects/:id', requireAdmin, async (req, res) => {
   if (!requireSupabase(res)) return;
   const { id } = req.params;
-  const { title, axis, why, logo_url, declinations, sketches, process_images, logo_supports, sort_order } = req.body || {};
+  const { title, axis, why, logo_url, declinations, sketches, process_images, logo_supports, videos, sort_order } = req.body || {};
 
   const update = {};
   if (title !== undefined) update.title = title;
@@ -239,6 +240,7 @@ app.put('/api/admin/projects/:id', requireAdmin, async (req, res) => {
   if (sketches !== undefined) update.sketches = sketches;
   if (process_images !== undefined) update.process_images = process_images;
   if (logo_supports !== undefined) update.logo_supports = logo_supports;
+  if (videos !== undefined) update.videos = videos;
   if (sort_order !== undefined) update.sort_order = sort_order;
 
   const { data, error } = await supabase.from('projects').update(update).eq('id', id).select().single();

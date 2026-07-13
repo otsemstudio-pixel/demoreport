@@ -82,6 +82,11 @@ button{font:inherit;cursor:pointer;}
 .proj-row .actions button:hover{background:var(--paper);}
 
 .empty-state{color:var(--ink-faint);font-size:14px;padding:20px;text-align:center;}
+
+.video-item{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--paper);}
+.video-item img{width:60px;height:34px;object-fit:cover;border-radius:4px;flex-shrink:0;background:#000;}
+.video-item span{flex:1;min-width:0;font-size:12.5px;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.video-item .rm{width:22px;height:22px;border-radius:50%;background:#B3261E;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;flex-shrink:0;}
 #statusBar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;font-size:13px;font-family:'IBM Plex Mono',monospace;opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:100;}
 #statusBar.show{opacity:1;}
 #statusBar.error{background:#B3261E;}
@@ -183,6 +188,16 @@ button{font:inherit;cursor:pointer;}
           </div>
         </div>
 
+        <div class="field">
+          <label>Vidéos YouTube (liens, pas de fichiers)</label>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="youtubeUrlInput" placeholder="https://youtube.com/watch?v=...">
+            <button type="button" class="btn" id="addYoutubeBtn" style="flex-shrink:0;">Ajouter</button>
+          </div>
+          <div class="hint" style="margin-top:6px;">Collez un lien YouTube (watch, youtu.be ou embed), cliquez sur "Ajouter". Répétez pour chaque vidéo.</div>
+          <div id="videoList" style="margin-top:10px;display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+
         <button type="submit" class="btn full" id="submitBtn">Enregistrer le projet</button>
         <button type="button" class="btn ghost full" id="cancelEditBtn" style="display:none;margin-top:8px;">Annuler la modification</button>
       </form>
@@ -201,7 +216,7 @@ const API_BASE_URL = "https://demoreport.onrender.com"; // ex: "https://demorepo
 
 const AXIS_LABELS = { visuel: 'Ncréa-Visuel', uxui: 'Ncréa-UX/UI', anim2d: 'Ncréa-2D' };
 let adminToken = localStorage.getItem('ncrea_admin_token') || '';
-let currentUploads = { logo_url: null, declinations: [], sketches: [], process_images: [], logo_supports: [] };
+let currentUploads = { logo_url: null, declinations: [], sketches: [], process_images: [], logo_supports: [], videos: [] };
 let allProjects = [];
 
 function showStatus(msg, isError){
@@ -222,6 +237,50 @@ function apiFetch(path, options){
     return data;
   });
 }
+
+/* ---------- Vidéos YouTube (liens uniquement, pas d'upload) ---------- */
+function extractYouTubeId(url){
+  if(!url) return null;
+  const m = url.match(/(?:youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+function renderVideoList(){
+  const box = document.getElementById('videoList');
+  box.innerHTML = '';
+  currentUploads.videos.forEach((url, idx)=>{
+    const id = extractYouTubeId(url);
+    const div = document.createElement('div');
+    div.className = 'video-item';
+    div.innerHTML =
+      (id ? '<img src="https://img.youtube.com/vi/' + id + '/default.jpg">' : '<div style="width:60px;height:34px;background:#eee;border-radius:4px;flex-shrink:0;"></div>') +
+      '<span>' + url + '</span>' +
+      '<div class="rm" data-idx="' + idx + '">×</div>';
+    box.appendChild(div);
+  });
+}
+
+document.getElementById('addYoutubeBtn').addEventListener('click', ()=>{
+  const input = document.getElementById('youtubeUrlInput');
+  const url = input.value.trim();
+  if(!url) return;
+  if(!extractYouTubeId(url)){
+    showStatus("Lien YouTube non reconnu. Vérifiez le format du lien.", true);
+    return;
+  }
+  currentUploads.videos.push(url);
+  input.value = '';
+  renderVideoList();
+});
+document.getElementById('youtubeUrlInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('addYoutubeBtn').click(); }
+});
+document.getElementById('videoList').addEventListener('click', (e)=>{
+  const rm = e.target.closest('.rm');
+  if(!rm) return;
+  currentUploads.videos.splice(parseInt(rm.dataset.idx, 10), 1);
+  renderVideoList();
+});
 
 /* ---------- Login ---------- */
 function tryEnterApp(){
@@ -329,8 +388,9 @@ function resetForm(){
   document.getElementById('editingId').value = '';
   document.getElementById('submitBtn').textContent = 'Enregistrer le projet';
   document.getElementById('cancelEditBtn').style.display = 'none';
-  currentUploads = { logo_url: null, declinations: [], sketches: [], process_images: [], logo_supports: [] };
+  currentUploads = { logo_url: null, declinations: [], sketches: [], process_images: [], logo_supports: [], videos: [] };
   ['logo_url','declinations','sketches','process_images','logo_supports'].forEach(renderThumbs);
+  renderVideoList();
 }
 
 document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
@@ -350,6 +410,7 @@ document.getElementById('projectForm').addEventListener('submit', async (e)=>{
     sketches: currentUploads.sketches,
     process_images: currentUploads.process_images,
     logo_supports: currentUploads.logo_supports,
+    videos: currentUploads.videos,
   };
 
   try{
@@ -414,8 +475,10 @@ document.getElementById('projectsList').addEventListener('click', async (e)=>{
       sketches: project.sketches || [],
       process_images: project.process_images || [],
       logo_supports: project.logo_supports || [],
+      videos: project.videos || [],
     };
     ['logo_url','declinations','sketches','process_images','logo_supports'].forEach(renderThumbs);
+    renderVideoList();
     document.getElementById('submitBtn').textContent = 'Mettre à jour le projet';
     document.getElementById('cancelEditBtn').style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
