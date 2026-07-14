@@ -77,6 +77,7 @@ button{font:inherit;}
 .btn.primary:hover{background:var(--active);border-color:var(--active);box-shadow:0 8px 28px -8px var(--active);transform:translateY(-2px);}
 .btn.ghost:hover{background:var(--ink);color:#fff;transform:translateY(-2px);}
 .btn.small{padding:10px 18px;font-size:12px;}
+.lang-toggle{padding:10px 14px;font-size:12px;min-width:44px;justify-content:center;}
 .btn svg{width:14px;height:14px;transition:transform .3s ease;}
 .btn:hover svg{transform:translateX(4px);}
 .btn[disabled]{opacity:.5;cursor:not-allowed;}
@@ -369,14 +370,15 @@ footer{padding:56px 0 40px;position:relative;}
   <div class="wrap nav">
     <a href="index.html" class="logo">Ncréa<span class="dot">.</span></a>
     <nav class="nav-links" id="navLinks">
-      <a href="index.html">Accueil</a>
-      <a href="savoir-faire.html">Nos savoir-faire</a>
-      <a href="process.html" class="active">Notre process</a>
-      <a href="realisations.html">Réalisations</a>
-      <a href="contact.html">Contact</a>
+      <a href="index.html" data-i18n="nav.home">Accueil</a>
+      <a href="savoir-faire.html" data-i18n="nav.savoirfaire">Nos savoir-faire</a>
+      <a href="process.html" class="active" data-i18n="nav.process">Notre process</a>
+      <a href="realisations.html" data-i18n="nav.realisations">Réalisations</a>
+      <a href="contact.html" data-i18n="nav.contact">Contact</a>
     </nav>
     <div class="nav-cta">
-      <button class="btn primary js-open-project-modal">Démarrer un projet</button>
+      <button class="btn ghost lang-toggle" id="langToggle" aria-label="Changer de langue / Switch language">EN</button>
+      <button class="btn primary js-open-project-modal" data-i18n="nav.cta">Démarrer un projet</button>
       <div class="burger" id="burger"><span></span><span></span><span></span></div>
     </div>
   </div>
@@ -385,9 +387,9 @@ footer{padding:56px 0 40px;position:relative;}
 
 <section class="page-hero">
   <div class="wrap reveal in">
-    <div class="eyebrow">Notre process</div>
-    <h1>Comment nous réalisons votre image de marque.</h1>
-    <p>Un même processus rigoureux en 5 étapes, adapté à chacun des trois axes — pour que vous compreniez toujours ce qui se passe et pourquoi.</p>
+    <div class="eyebrow" data-i18n="nav.process">Notre process</div>
+    <h1 data-i18n="proc.hero.title">Comment nous réalisons votre image de marque.</h1>
+    <p data-i18n="proc.hero.desc">Un même processus rigoureux en 5 étapes, adapté à chacun des trois axes — pour que vous compreniez toujours ce qui se passe et pourquoi.</p>
   </div>
 </section>
 
@@ -396,8 +398,8 @@ footer{padding:56px 0 40px;position:relative;}
 <section class="section">
   <div class="wrap">
     <div class="section-head reveal">
-      <h2>Choisissez un univers<br>pour voir le détail des étapes.</h2>
-      <p>Le squelette du process est identique ; le contenu de chaque étape change selon l'axe choisi.</p>
+      <h2 data-i18n="proc.choose.title">Choisissez un univers<br>pour voir le détail des étapes.</h2>
+      <p data-i18n="proc.choose.desc">Le squelette du process est identique ; le contenu de chaque étape change selon l'axe choisi.</p>
     </div>
 
     <div class="tabs reveal">
@@ -421,32 +423,32 @@ footer{padding:56px 0 40px;position:relative;}
 <section class="section">
   <div class="wrap">
     <div class="section-head reveal">
-      <h2>Le cadre contractuel,<br>simple et transparent.</h2>
-      <p>Quel que soit l'axe choisi, l'engagement suit toujours la même logique claire.</p>
+      <h2 data-i18n="proc.frame.title">Le cadre contractuel,<br>simple et transparent.</h2>
+      <p data-i18n="proc.frame.desc">Quel que soit l'axe choisi, l'engagement suit toujours la même logique claire.</p>
     </div>
     <div class="engage-grid reveal">
-      <div class="engage-card"><div class="engage-num">01</div><h4>Demande initiale</h4><p>Vous décrivez votre besoin via le formulaire "Démarrer un projet".</p></div>
-      <div class="engage-card"><div class="engage-num">02</div><h4>Échange & devis</h4><p>Un rendez-vous pour cadrer précisément le périmètre et discuter du prix.</p></div>
-      <div class="engage-card money"><div class="engage-num">03</div><h4>Accord & acompte 50 %</h4><p>Une fois le devis validé, un acompte de 50 % du prix convenu est réglé pour lancer la production.</p></div>
-      <div class="engage-card"><div class="engage-num">04</div><h4>Livraison & solde</h4><p>Les livrables finaux sont transmis à réception du solde de 50 % restant.</p></div>
+      <div class="engage-card"><div class="engage-num">01</div><h4 data-i18n="proc.frame.1.h">Demande initiale</h4><p data-i18n="proc.frame.1.p">Vous décrivez votre besoin via le formulaire "Démarrer un projet".</p></div>
+      <div class="engage-card"><div class="engage-num">02</div><h4 data-i18n="proc.frame.2.h">Échange & devis</h4><p data-i18n="proc.frame.2.p">Un rendez-vous pour cadrer précisément le périmètre et discuter du prix.</p></div>
+      <div class="engage-card money"><div class="engage-num">03</div><h4 data-i18n="proc.frame.3.h">Accord & acompte 50 %</h4><p data-i18n="proc.frame.3.p">Une fois le devis validé, un acompte de 50 % du prix convenu est réglé pour lancer la production.</p></div>
+      <div class="engage-card"><div class="engage-num">04</div><h4 data-i18n="proc.frame.4.h">Livraison & solde</h4><p data-i18n="proc.frame.4.p">Les livrables finaux sont transmis à réception du solde de 50 % restant.</p></div>
     </div>
   </div>
 </section>
 
 <section class="manifesto">
   <div class="wrap reveal">
-    <div class="eyebrow">Pourquoi ce fonctionnement</div>
-    <h2>« Un prix discuté de vive voix, un acompte qui engage les deux parties, un solde à la livraison : une manière simple de protéger votre projet autant que notre travail. »</h2>
+    <div class="eyebrow" data-i18n="proc.why.eyebrow">Pourquoi ce fonctionnement</div>
+    <h2 data-i18n="proc.why.title">« Un prix discuté de vive voix, un acompte qui engage les deux parties, un solde à la livraison : une manière simple de protéger votre projet autant que notre travail. »</h2>
   </div>
 </section>
 
 <section class="cta-section" id="contact">
   <div class="wrap reveal">
-    <div class="eyebrow">Prêt à cadrer votre projet ?</div>
-    <h2>Décrivez-nous votre besoin, nous programmons un premier échange pour en discuter.</h2>
+    <div class="eyebrow" data-i18n="proc.cta.eyebrow">Prêt à cadrer votre projet ?</div>
+    <h2 data-i18n="proc.cta.title">Décrivez-nous votre besoin, nous programmons un premier échange pour en discuter.</h2>
     <div class="cta-actions">
-      <button class="btn primary js-open-project-modal">Démarrer un projet</button>
-      <a href="savoir-faire.html" class="btn ghost">Revoir nos 3 axes</a>
+      <button class="btn primary js-open-project-modal" data-i18n="nav.cta">Démarrer un projet</button>
+      <a href="savoir-faire.html" class="btn ghost" data-i18n="proc.cta.back">Revoir nos 3 axes</a>
     </div>
   </div>
 </section>
@@ -457,29 +459,29 @@ footer{padding:56px 0 40px;position:relative;}
     <div class="foot-grid">
       <div class="foot-col">
         <div class="logo" style="margin-bottom:16px;">Ncréa<span class="dot">.</span></div>
-        <p style="max-width:260px;">Studio de création visuelle, UX/UI et animation 2D basé à Kigali, au service des marques africaines.</p>
+        <p style="max-width:260px;" data-i18n="footer.blurb">Studio de création visuelle, UX/UI et animation 2D basé à Kigali, au service des marques africaines.</p>
       </div>
       <div class="foot-col">
-        <h5>Univers</h5>
+        <h5 data-i18n="footer.universe">Univers</h5>
         <a href="savoir-faire.html">Ncréa-Visuel</a>
         <a href="savoir-faire.html">Ncréa-UX/UI</a>
         <a href="savoir-faire.html">Ncréa-2D</a>
       </div>
       <div class="foot-col">
-        <h5>Studio</h5>
-        <a href="process.html">Notre process</a>
-        <a href="realisations.html">Réalisations</a>
-        <a href="contact.html">Contact</a>
+        <h5 data-i18n="footer.studio">Studio</h5>
+        <a href="process.html" data-i18n="nav.process">Notre process</a>
+        <a href="realisations.html" data-i18n="nav.realisations">Réalisations</a>
+        <a href="contact.html" data-i18n="nav.contact">Contact</a>
       </div>
       <div class="foot-col">
-        <h5>Contact</h5>
+        <h5 data-i18n="footer.contact">Contact</h5>
         <a href="mailto:otsemstudio@gmail.com">otsemstudio@gmail.com</a>
         <a href="tel:+250799496971">+250 799 496 971</a>
-        <p>Kigali, Rwanda</p>
+        <p data-i18n="footer.location">Kigali, Rwanda</p>
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Ncréa. Tous droits réservés.</span>
+      <span data-i18n="footer.copyright">© 2026 Ncréa. Tous droits réservés.</span>
       <span>Visuel · UX/UI · 2D</span>
     </div>
   </div>
@@ -493,99 +495,196 @@ footer{padding:56px 0 40px;position:relative;}
     </div>
 
     <form id="projectForm">
-      <div class="eyebrow">Démarrer un projet</div>
-      <h3 id="modalTitle">Parlons de votre marque</h3>
-      <p class="modal-intro">Répondez à ces quelques questions : elles nous permettent de préparer un premier rendez-vous utile, où nous cadrerons ensemble le périmètre exact et le prix.</p>
+      <div class="eyebrow" data-i18n="modal.eyebrow">Démarrer un projet</div>
+      <h3 id="modalTitle" data-i18n="modal.title">Parlons de votre marque</h3>
+      <p class="modal-intro" data-i18n="modal.intro">Répondez à ces quelques questions : elles nous permettent de préparer un premier rendez-vous utile, où nous cadrerons ensemble le périmètre exact et le prix.</p>
 
       <div class="field-row">
         <div class="field">
-          <label for="f-company">Nom de l'entreprise</label>
-          <input type="text" id="f-company" required placeholder="Ex: Coopérative Umuganda">
+          <label for="f-company" data-i18n="modal.company">Nom de l'entreprise</label>
+          <input type="text" id="f-company" required placeholder="Ex: Coopérative Umuganda" data-i18n-placeholder="modal.company.ph">
         </div>
         <div class="field">
-          <label for="f-name">Votre nom</label>
-          <input type="text" id="f-name" required placeholder="Ex: Aline K.">
+          <label for="f-name" data-i18n="modal.name">Votre nom</label>
+          <input type="text" id="f-name" required placeholder="Ex: Aline K." data-i18n-placeholder="modal.name.ph">
         </div>
       </div>
 
       <div class="field-row">
         <div class="field">
-          <label for="f-email">Email</label>
+          <label for="f-email" data-i18n="modal.email">Email</label>
           <input type="email" id="f-email" required placeholder="vous@entreprise.com">
         </div>
         <div class="field">
-          <label for="f-phone">Téléphone (optionnel)</label>
+          <label for="f-phone" data-i18n="modal.phone">Téléphone (optionnel)</label>
           <input type="tel" id="f-phone" placeholder="+250 7...">
         </div>
       </div>
 
       <div class="field">
-        <label>Quel(s) axe(s) vous intéresse(nt) ?</label>
+        <label data-i18n="modal.axes">Quel(s) axe(s) vous intéresse(nt) ?</label>
         <div class="check-group" id="axisCheckGroup">
           <label class="check-pill"><input type="checkbox" name="axis" value="Ncréa-Visuel"><span>Ncréa-Visuel</span></label>
           <label class="check-pill"><input type="checkbox" name="axis" value="Ncréa-UX/UI"><span>Ncréa-UX/UI</span></label>
           <label class="check-pill"><input type="checkbox" name="axis" value="Ncréa-2D"><span>Ncréa-2D</span></label>
-          <label class="check-pill"><input type="checkbox" name="axis" value="Je ne sais pas encore"><span>Je ne sais pas encore</span></label>
+          <label class="check-pill"><input type="checkbox" name="axis" value="Je ne sais pas encore"><span data-i18n="modal.axes.unsure">Je ne sais pas encore</span></label>
         </div>
       </div>
 
       <div class="field">
-        <label for="f-desc">Décrivez votre projet en quelques mots</label>
-        <textarea id="f-desc" required placeholder="Ex: Nous lançons une nouvelle gamme et avons besoin d'une identité visuelle complète..."></textarea>
+        <label for="f-desc" data-i18n="modal.desc">Décrivez votre projet en quelques mots</label>
+        <textarea id="f-desc" required placeholder="Ex: Nous lançons une nouvelle gamme et avons besoin d'une identité visuelle complète..." data-i18n-placeholder="modal.desc.ph"></textarea>
       </div>
 
       <div class="field-row">
         <div class="field">
-          <label for="f-budget">Budget approximatif</label>
+          <label for="f-budget" data-i18n="modal.budget">Budget approximatif</label>
           <select id="f-budget">
-            <option value="Moins de 500 $">Moins de 500 $</option>
-            <option value="500 - 1 500 $">500 – 1 500 $</option>
-            <option value="1 500 - 3 000 $">1 500 – 3 000 $</option>
-            <option value="Plus de 3 000 $">Plus de 3 000 $</option>
-            <option value="À définir ensemble" selected>À définir ensemble</option>
+            <option value="Moins de 500 $" data-i18n="modal.budget.o1">Moins de 500 $</option>
+            <option value="500 - 1 500 $" data-i18n="modal.budget.o2">500 – 1 500 $</option>
+            <option value="1 500 - 3 000 $" data-i18n="modal.budget.o3">1 500 – 3 000 $</option>
+            <option value="Plus de 3 000 $" data-i18n="modal.budget.o4">Plus de 3 000 $</option>
+            <option value="À définir ensemble" selected data-i18n="modal.budget.o5">À définir ensemble</option>
           </select>
         </div>
         <div class="field">
-          <label for="f-delai">Délai souhaité</label>
+          <label for="f-delai" data-i18n="modal.delai">Délai souhaité</label>
           <select id="f-delai">
-            <option value="Urgent (moins de 2 semaines)">Urgent (moins de 2 semaines)</option>
-            <option value="Environ 1 mois">Environ 1 mois</option>
-            <option value="2 à 3 mois">2 à 3 mois</option>
-            <option value="Flexible" selected>Flexible</option>
+            <option value="Urgent (moins de 2 semaines)" data-i18n="modal.delai.o1">Urgent (moins de 2 semaines)</option>
+            <option value="Environ 1 mois" data-i18n="modal.delai.o2">Environ 1 mois</option>
+            <option value="2 à 3 mois" data-i18n="modal.delai.o3">2 à 3 mois</option>
+            <option value="Flexible" selected data-i18n="modal.delai.o4">Flexible</option>
           </select>
         </div>
       </div>
 
       <div class="field">
-        <label for="f-dispo">Vos disponibilités pour un premier échange</label>
-        <input type="text" id="f-dispo" placeholder="Ex: Lundi ou mardi après-midi">
+        <label for="f-dispo" data-i18n="modal.dispo">Vos disponibilités pour un premier échange</label>
+        <input type="text" id="f-dispo" placeholder="Ex: Lundi ou mardi après-midi" data-i18n-placeholder="modal.dispo.ph">
       </div>
 
       <button type="submit" class="btn primary" style="width:100%;justify-content:center;">
-        Envoyer ma demande
+        <span data-i18n="modal.submit">Envoyer ma demande</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </button>
 
-      <p class="form-note">Votre demande est transmise directement à Ncréa (email + SMS). Si le service est momentanément indisponible, votre messagerie ou WhatsApp s'ouvriront en secours — aucune donnée n'est stockée sur ce site.</p>
+      <p class="form-note" data-i18n="modal.note">Votre demande est transmise directement à Ncréa (email + SMS). Si le service est momentanément indisponible, votre messagerie ou WhatsApp s'ouvriront en secours — aucune donnée n'est stockée sur ce site.</p>
     </form>
 
     <div class="confirm-panel" id="confirmPanel">
       <div class="confirm-check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
-      <h3>Demande envoyée</h3>
-      <p class="modal-intro" style="margin-bottom:0;">Voici comment se déroule la suite, étape par étape :</p>
+      <h3 data-i18n="modal.confirm.title">Demande envoyée</h3>
+      <p class="modal-intro" style="margin-bottom:0;" data-i18n="modal.confirm.intro">Voici comment se déroule la suite, étape par étape :</p>
       <div class="confirm-steps">
-        <div class="confirm-step"><div class="n">1</div><p><b>Étude de votre demande</b> — nous revenons vers vous sous 48h.</p></div>
-        <div class="confirm-step"><div class="n">2</div><p><b>Rendez-vous de cadrage</b> — un échange pour préciser le besoin et discuter du prix.</p></div>
-        <div class="confirm-step"><div class="n">3</div><p><b>Devis & accord</b> — vous validez le périmètre exact et le tarif convenu.</p></div>
-        <div class="confirm-step"><div class="n">4</div><p><b>Acompte de 50 %</b> — réglé à la validation du devis pour lancer la production, le solde étant dû à la livraison finale.</p></div>
+        <div class="confirm-step"><div class="n">1</div><p data-i18n="modal.confirm.step1"><b>Étude de votre demande</b> — nous revenons vers vous sous 48h.</p></div>
+        <div class="confirm-step"><div class="n">2</div><p data-i18n="modal.confirm.step2"><b>Rendez-vous de cadrage</b> — un échange pour préciser le besoin et discuter du prix.</p></div>
+        <div class="confirm-step"><div class="n">3</div><p data-i18n="modal.confirm.step3"><b>Devis & accord</b> — vous validez le périmètre exact et le tarif convenu.</p></div>
+        <div class="confirm-step"><div class="n">4</div><p data-i18n="modal.confirm.step4"><b>Acompte de 50 %</b> — réglé à la validation du devis pour lancer la production, le solde étant dû à la livraison finale.</p></div>
       </div>
-      <button type="button" class="btn ghost" id="confirmCloseBtn" style="margin-top:10px;">Fermer</button>
+      <button type="button" class="btn ghost" id="confirmCloseBtn" style="margin-top:10px;" data-i18n="modal.confirm.close">Fermer</button>
     </div>
   </div>
 </div>
 
 
 <script>
+
+/* ---------- i18n (FR/EN) ---------- */
+window.I18N_EN = window.I18N_EN || {};
+window.I18N_EN_PLACEHOLDER = window.I18N_EN_PLACEHOLDER || {};
+Object.assign(window.I18N_EN, {
+  'nav.home': 'Home',
+  'nav.savoirfaire': 'What we do',
+  'nav.process': 'Our process',
+  'nav.realisations': 'Work',
+  'nav.contact': 'Contact',
+  'nav.cta': 'Start a project',
+
+  'axis.01': 'Area 01', 'axis.02': 'Area 02', 'axis.03': 'Area 03',
+  'chip.charte': 'Brand guidelines',
+  'chip.supports': 'Printed materials',
+  'chip.animfinale': 'Final animation',
+
+  'footer.blurb': 'Creative studio for visual identity, UX/UI and 2D animation based in Kigali, serving African brands.',
+  'footer.universe': 'Expertise',
+  'footer.studio': 'Studio',
+  'footer.contact': 'Contact',
+  'footer.location': 'Kigali, Rwanda',
+  'footer.copyright': '© 2026 Ncréa. All rights reserved.',
+
+  'modal.eyebrow': 'Start a project',
+  'modal.title': "Let's talk about your brand",
+  'modal.intro': "Answer these few questions: they help us prepare a genuinely useful first call, where we'll scope the exact deliverables and price together.",
+  'modal.company': 'Company name',
+  'modal.company.ph': 'E.g. Umuganda Cooperative',
+  'modal.name': 'Your name',
+  'modal.name.ph': 'E.g. Aline K.',
+  'modal.email': 'Email',
+  'modal.phone': 'Phone (optional)',
+  'modal.axes': 'Which area(s) are you interested in?',
+  'modal.axes.unsure': "I'm not sure yet",
+  'modal.desc': 'Describe your project in a few words',
+  'modal.desc.ph': "E.g. We're launching a new range and need a complete visual identity...",
+  'modal.budget': 'Approximate budget',
+  'modal.budget.o1': 'Under $500',
+  'modal.budget.o2': '$500 – $1,500',
+  'modal.budget.o3': '$1,500 – $3,000',
+  'modal.budget.o4': 'Over $3,000',
+  'modal.budget.o5': "Let's discuss it together",
+  'modal.delai': 'Desired timeline',
+  'modal.delai.o1': 'Urgent (under 2 weeks)',
+  'modal.delai.o2': 'About 1 month',
+  'modal.delai.o3': '2 to 3 months',
+  'modal.delai.o4': 'Flexible',
+  'modal.dispo': 'Your availability for a first call',
+  'modal.dispo.ph': 'E.g. Thursday afternoon',
+  'modal.submit': 'Send my request',
+  'modal.note': "Your request is sent directly to Ncréa (email + SMS). If the service is temporarily unavailable, your mail app or WhatsApp will open as a backup — no data is stored on this site.",
+  'modal.confirm.title': 'Request sent',
+  'modal.confirm.intro': "Here's what happens next, step by step:",
+  'modal.confirm.step1': '<b>Reviewing your request</b> — we get back to you within 48h.',
+  'modal.confirm.step2': '<b>Scoping call</b> — a conversation to clarify the need and discuss pricing.',
+  'modal.confirm.step3': '<b>Quote & agreement</b> — you validate the exact scope and price.',
+  'modal.confirm.step4': '<b>50% deposit</b> — paid once the quote is approved to start production, the balance due on final delivery.',
+  'modal.confirm.close': 'Close',
+});
+
+const LANG_KEY = 'ncrea_lang';
+function getLang(){ return localStorage.getItem(LANG_KEY) || 'fr'; }
+
+function applyLang(lang){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(lang === 'en' && window.I18N_EN[key] !== undefined){
+      if(el.dataset.frCache === undefined) el.dataset.frCache = el.innerHTML;
+      el.innerHTML = window.I18N_EN[key];
+    } else if(el.dataset.frCache !== undefined){
+      el.innerHTML = el.dataset.frCache;
+    }
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-placeholder');
+    if(lang === 'en' && window.I18N_EN_PLACEHOLDER[key] !== undefined){
+      if(el.dataset.frPlaceholderCache === undefined) el.dataset.frPlaceholderCache = el.placeholder;
+      el.placeholder = window.I18N_EN_PLACEHOLDER[key];
+    } else if(el.dataset.frPlaceholderCache !== undefined){
+      el.placeholder = el.dataset.frPlaceholderCache;
+    }
+  });
+  document.documentElement.lang = lang;
+}
+function updateLangButton(lang){
+  document.querySelectorAll('.lang-toggle').forEach(btn=>{ btn.textContent = lang === 'fr' ? 'EN' : 'FR'; });
+}
+function setLang(lang){
+  localStorage.setItem(LANG_KEY, lang);
+  applyLang(lang);
+  updateLangButton(lang);
+  if(window.onLangChange) window.onLangChange(lang);
+}
+document.querySelectorAll('.lang-toggle').forEach(btn=>{
+  btn.addEventListener('click', ()=> setLang(getLang() === 'fr' ? 'en' : 'fr'));
+});
 
 /* ---------- backend API ----------
    Renseignez ici l'URL de votre serveur une fois déployé (voir server/README.md).
@@ -772,6 +871,30 @@ const PROCESS_CONTENT = {
   ]}
 };
 
+const PROCESS_CONTENT_EN = {
+  visuel: { steps:[
+      ['Discovery','We talk about your business, your market and the image you want to project.'],
+      ['Visual research','Benchmarking, moodboards and art direction options.'],
+      ['Logo design','Building and vectorizing the logo proposals.'],
+      ['Brand guidelines','Colors, typography, usage rules — a complete, documented system.'],
+      ['Variations & delivery','Applied to your real materials, source files delivered.']
+  ]},
+  uxui: { steps:[
+      ['Discovery','We map your users, their journeys and your business goals.'],
+      ['Architecture','Product structure and low-fidelity wireframes.'],
+      ['UI design','High-fidelity interfaces aligned with your brand identity.'],
+      ['Prototype & testing','Interactive prototype tested with real users.'],
+      ['Design system & delivery','Documented components, ready for your team to implement.']
+  ]},
+  anim2d: { steps:[
+      ['Discovery','We define the key message and the ideal length of the video.'],
+      ['Script & storyboard','Scripting and shot-by-shot breakdown.'],
+      ['Style frame','A reference image locks in the animation\'s art direction.'],
+      ['Animatic','Rough-timed, low-res moving version, for approval.'],
+      ['Final animation','Full render, sound design and delivery in the formats you need.']
+  ]}
+};
+
 let activeStep = 0;
 
 function updateStepUI(){
@@ -782,20 +905,30 @@ function updateStepUI(){
 }
 function hoverStep(i){ activeStep = i; updateStepUI(); }
 
-function setAxis(axis){
-  currentAxis = axis;
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.axis===axis));
-  applyPalette(axis);
-  const data = PROCESS_CONTENT[axis];
+function renderProcessSteps(axis){
+  const source = (getLang() === 'en' ? PROCESS_CONTENT_EN : PROCESS_CONTENT);
+  const data = source[axis];
+  if(!data) return;
   data.steps.forEach((s,i)=>{
     const t = document.querySelector('[data-k="t'+(i+1)+'"]');
     const p = document.querySelector('[data-k="p'+(i+1)+'"]');
     if(t) t.textContent = s[0];
     if(p) p.textContent = s[1];
   });
+}
+
+function setAxis(axis){
+  currentAxis = axis;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.axis===axis));
+  applyPalette(axis);
+  renderProcessSteps(axis);
   activeStep = 0;
   updateStepUI();
 }
+
+/* Redessine les étapes dans la nouvelle langue quand on bascule FR/EN,
+   sans changer l'axe actuellement sélectionné. */
+window.onLangChange = function(){ renderProcessSteps(currentAxis); };
 
 try{
   setAxis('visuel');
@@ -805,6 +938,30 @@ try{
   }, 3200);
 }catch(err){ console.error('Ncréa process init error:', err); }
 
+const PAGE_I18N_EN = {
+  'proc.hero.title': 'How we bring your brand image to life.',
+  'proc.hero.desc': 'The same rigorous 5-step process, adapted to each of the three areas — so you always understand what\'s happening and why.',
+  'proc.choose.title': 'Pick an area<br>to see the steps in detail.',
+  'proc.choose.desc': 'The skeleton of the process is identical; the content of each step changes depending on the area chosen.',
+  'proc.frame.title': 'The agreement,<br>simple and transparent.',
+  'proc.frame.desc': 'Whichever area is chosen, the engagement always follows the same clear logic.',
+  'proc.frame.1.h': 'Initial request', 'proc.frame.1.p': 'You describe your need via the "Start a project" form.',
+  'proc.frame.2.h': 'Call & quote', 'proc.frame.2.p': 'A call to precisely scope the project and discuss pricing.',
+  'proc.frame.3.h': 'Agreement & 50% deposit', 'proc.frame.3.p': 'Once the quote is approved, a 50% deposit is paid to start production.',
+  'proc.frame.4.h': 'Delivery & balance', 'proc.frame.4.p': 'Final deliverables are sent once the remaining 50% balance is received.',
+  'proc.why.eyebrow': 'Why we work this way',
+  'proc.why.title': '"A price discussed openly, a deposit that commits both parties, a balance due on delivery: a simple way to protect your project as much as our work."',
+  'proc.cta.eyebrow': 'Ready to scope your project?',
+  'proc.cta.title': "Tell us about your need, we'll schedule a first call to discuss it.",
+  'proc.cta.back': 'Revisit our 3 areas',
+};
+
+
+/* i18n : fusionne le dictionnaire de la page dans le dictionnaire global, puis applique
+   la langue mémorisée, une fois tous les dictionnaires chargés. */
+if (typeof PAGE_I18N_EN !== 'undefined') Object.assign(window.I18N_EN, PAGE_I18N_EN);
+applyLang(getLang());
+updateLangButton(getLang());
 </script>
 
 </body>

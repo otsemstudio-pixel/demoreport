@@ -77,6 +77,7 @@ button{font:inherit;}
 .btn.primary:hover{background:var(--active);border-color:var(--active);box-shadow:0 8px 28px -8px var(--active);transform:translateY(-2px);}
 .btn.ghost:hover{background:var(--ink);color:#fff;transform:translateY(-2px);}
 .btn.small{padding:10px 18px;font-size:12px;}
+.lang-toggle{padding:10px 14px;font-size:12px;min-width:44px;justify-content:center;}
 .btn svg{width:14px;height:14px;transition:transform .3s ease;}
 .btn:hover svg{transform:translateX(4px);}
 .btn[disabled]{opacity:.5;cursor:not-allowed;}
@@ -369,14 +370,15 @@ footer{padding:56px 0 40px;position:relative;}
   <div class="wrap nav">
     <a href="index.html" class="logo">Ncréa<span class="dot">.</span></a>
     <nav class="nav-links" id="navLinks">
-      <a href="index.html">Accueil</a>
-      <a href="savoir-faire.html">Nos savoir-faire</a>
-      <a href="process.html">Notre process</a>
-      <a href="realisations.html">Réalisations</a>
-      <a href="contact.html" class="active">Contact</a>
+      <a href="index.html" data-i18n="nav.home">Accueil</a>
+      <a href="savoir-faire.html" data-i18n="nav.savoirfaire">Nos savoir-faire</a>
+      <a href="process.html" data-i18n="nav.process">Notre process</a>
+      <a href="realisations.html" data-i18n="nav.realisations">Réalisations</a>
+      <a href="contact.html" class="active" data-i18n="nav.contact">Contact</a>
     </nav>
     <div class="nav-cta">
-      <button class="btn primary js-open-project-modal">Démarrer un projet</button>
+      <button class="btn ghost lang-toggle" id="langToggle" aria-label="Changer de langue / Switch language">EN</button>
+      <button class="btn primary js-open-project-modal" data-i18n="nav.cta">Démarrer un projet</button>
       <div class="burger" id="burger"><span></span><span></span><span></span></div>
     </div>
   </div>
@@ -385,9 +387,9 @@ footer{padding:56px 0 40px;position:relative;}
 
 <section class="page-hero">
   <div class="wrap reveal in">
-    <div class="eyebrow">Contact</div>
-    <h1>Parlons de votre marque.</h1>
-    <p>Une question, un devis, un simple bonjour — écrivez-nous. Pour cadrer un vrai projet, préférez le formulaire "Démarrer un projet".</p>
+    <div class="eyebrow" data-i18n="nav.contact">Contact</div>
+    <h1 data-i18n="contact.hero.title">Parlons de votre marque.</h1>
+    <p data-i18n="contact.hero.desc">Une question, un devis, un simple bonjour — écrivez-nous. Pour cadrer un vrai projet, préférez le formulaire "Démarrer un projet".</p>
   </div>
 </section>
 
@@ -397,47 +399,47 @@ footer{padding:56px 0 40px;position:relative;}
   <div class="wrap contact-grid">
     <div class="reveal">
       <div class="contact-info-card">
-        <h4>Email</h4>
+        <h4 data-i18n="modal.email">Email</h4>
         <a href="mailto:otsemstudio@gmail.com">otsemstudio@gmail.com</a>
       </div>
       <div class="contact-info-card">
-        <h4>Téléphone / WhatsApp</h4>
+        <h4 data-i18n="contact.phone">Téléphone / WhatsApp</h4>
         <a href="tel:+250799496971">+250 799 496 971</a>
       </div>
       <div class="contact-info-card">
-        <h4>Localisation</h4>
-        <p>Kigali, Rwanda — projets menés dans toute l'Afrique</p>
+        <h4 data-i18n="contact.location">Localisation</h4>
+        <p data-i18n="contact.location.desc">Kigali, Rwanda — projets menés dans toute l'Afrique</p>
       </div>
       <div class="contact-info-card">
-        <h4>Un projet précis en tête ?</h4>
-        <p style="font-family:'Inter',sans-serif;font-size:14px;color:var(--ink-soft);margin-bottom:14px;">Utilisez plutôt notre formulaire dédié : il nous permet de préparer un premier rendez-vous vraiment utile.</p>
-        <button class="btn small primary js-open-project-modal">Démarrer un projet</button>
+        <h4 data-i18n="contact.specific">Un projet précis en tête ?</h4>
+        <p style="font-family:'Inter',sans-serif;font-size:14px;color:var(--ink-soft);margin-bottom:14px;" data-i18n="contact.specific.desc">Utilisez plutôt notre formulaire dédié : il nous permet de préparer un premier rendez-vous vraiment utile.</p>
+        <button class="btn small primary js-open-project-modal" data-i18n="nav.cta">Démarrer un projet</button>
       </div>
     </div>
 
     <div class="reveal">
       <form id="contactForm">
         <div class="field">
-          <label for="c-name">Nom</label>
-          <input type="text" id="c-name" required placeholder="Votre nom">
+          <label for="c-name" data-i18n="contact.name">Nom</label>
+          <input type="text" id="c-name" required placeholder="Votre nom" data-i18n-placeholder="contact.name.ph">
         </div>
         <div class="field">
-          <label for="c-email">Email</label>
+          <label for="c-email" data-i18n="modal.email">Email</label>
           <input type="email" id="c-email" required placeholder="vous@entreprise.com">
         </div>
         <div class="field">
-          <label for="c-subject">Sujet</label>
-          <input type="text" id="c-subject" placeholder="Ex: Question sur vos prestations">
+          <label for="c-subject" data-i18n="contact.subject">Sujet</label>
+          <input type="text" id="c-subject" placeholder="Ex: Question sur vos prestations" data-i18n-placeholder="contact.subject.ph">
         </div>
         <div class="field">
-          <label for="c-message">Message</label>
-          <textarea id="c-message" required placeholder="Votre message..."></textarea>
+          <label for="c-message" data-i18n="contact.message">Message</label>
+          <textarea id="c-message" required placeholder="Votre message..." data-i18n-placeholder="contact.message.ph"></textarea>
         </div>
         <button type="submit" class="btn primary" style="width:100%;justify-content:center;">
-          Envoyer le message
+          <span data-i18n="contact.send">Envoyer le message</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </button>
-        <p class="form-note" id="contactNote">Votre message est transmis directement à Ncréa. Si le service est momentanément indisponible, votre messagerie et WhatsApp s'ouvriront en secours — aucune donnée n'est stockée sur ce site.</p>
+        <p class="form-note" id="contactNote" data-i18n="contact.note">Votre message est transmis directement à Ncréa. Si le service est momentanément indisponible, votre messagerie et WhatsApp s'ouvriront en secours — aucune donnée n'est stockée sur ce site.</p>
       </form>
     </div>
   </div>
@@ -449,29 +451,29 @@ footer{padding:56px 0 40px;position:relative;}
     <div class="foot-grid">
       <div class="foot-col">
         <div class="logo" style="margin-bottom:16px;">Ncréa<span class="dot">.</span></div>
-        <p style="max-width:260px;">Studio de création visuelle, UX/UI et animation 2D basé à Kigali, au service des marques africaines.</p>
+        <p style="max-width:260px;" data-i18n="footer.blurb">Studio de création visuelle, UX/UI et animation 2D basé à Kigali, au service des marques africaines.</p>
       </div>
       <div class="foot-col">
-        <h5>Univers</h5>
+        <h5 data-i18n="footer.universe">Univers</h5>
         <a href="savoir-faire.html">Ncréa-Visuel</a>
         <a href="savoir-faire.html">Ncréa-UX/UI</a>
         <a href="savoir-faire.html">Ncréa-2D</a>
       </div>
       <div class="foot-col">
-        <h5>Studio</h5>
-        <a href="process.html">Notre process</a>
-        <a href="realisations.html">Réalisations</a>
-        <a href="contact.html">Contact</a>
+        <h5 data-i18n="footer.studio">Studio</h5>
+        <a href="process.html" data-i18n="nav.process">Notre process</a>
+        <a href="realisations.html" data-i18n="nav.realisations">Réalisations</a>
+        <a href="contact.html" data-i18n="nav.contact">Contact</a>
       </div>
       <div class="foot-col">
-        <h5>Contact</h5>
+        <h5 data-i18n="footer.contact">Contact</h5>
         <a href="mailto:otsemstudio@gmail.com">otsemstudio@gmail.com</a>
         <a href="tel:+250799496971">+250 799 496 971</a>
-        <p>Kigali, Rwanda</p>
+        <p data-i18n="footer.location">Kigali, Rwanda</p>
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Ncréa. Tous droits réservés.</span>
+      <span data-i18n="footer.copyright">© 2026 Ncréa. Tous droits réservés.</span>
       <span>Visuel · UX/UI · 2D</span>
     </div>
   </div>
@@ -485,99 +487,196 @@ footer{padding:56px 0 40px;position:relative;}
     </div>
 
     <form id="projectForm">
-      <div class="eyebrow">Démarrer un projet</div>
-      <h3 id="modalTitle">Parlons de votre marque</h3>
-      <p class="modal-intro">Répondez à ces quelques questions : elles nous permettent de préparer un premier rendez-vous utile, où nous cadrerons ensemble le périmètre exact et le prix.</p>
+      <div class="eyebrow" data-i18n="modal.eyebrow">Démarrer un projet</div>
+      <h3 id="modalTitle" data-i18n="modal.title">Parlons de votre marque</h3>
+      <p class="modal-intro" data-i18n="modal.intro">Répondez à ces quelques questions : elles nous permettent de préparer un premier rendez-vous utile, où nous cadrerons ensemble le périmètre exact et le prix.</p>
 
       <div class="field-row">
         <div class="field">
-          <label for="f-company">Nom de l'entreprise</label>
-          <input type="text" id="f-company" required placeholder="Ex: Coopérative Umuganda">
+          <label for="f-company" data-i18n="modal.company">Nom de l'entreprise</label>
+          <input type="text" id="f-company" required placeholder="Ex: Coopérative Umuganda" data-i18n-placeholder="modal.company.ph">
         </div>
         <div class="field">
-          <label for="f-name">Votre nom</label>
-          <input type="text" id="f-name" required placeholder="Ex: Aline K.">
+          <label for="f-name" data-i18n="modal.name">Votre nom</label>
+          <input type="text" id="f-name" required placeholder="Ex: Aline K." data-i18n-placeholder="modal.name.ph">
         </div>
       </div>
 
       <div class="field-row">
         <div class="field">
-          <label for="f-email">Email</label>
+          <label for="f-email" data-i18n="modal.email">Email</label>
           <input type="email" id="f-email" required placeholder="vous@entreprise.com">
         </div>
         <div class="field">
-          <label for="f-phone">Téléphone (optionnel)</label>
+          <label for="f-phone" data-i18n="modal.phone">Téléphone (optionnel)</label>
           <input type="tel" id="f-phone" placeholder="+250 7...">
         </div>
       </div>
 
       <div class="field">
-        <label>Quel(s) axe(s) vous intéresse(nt) ?</label>
+        <label data-i18n="modal.axes">Quel(s) axe(s) vous intéresse(nt) ?</label>
         <div class="check-group" id="axisCheckGroup">
           <label class="check-pill"><input type="checkbox" name="axis" value="Ncréa-Visuel"><span>Ncréa-Visuel</span></label>
           <label class="check-pill"><input type="checkbox" name="axis" value="Ncréa-UX/UI"><span>Ncréa-UX/UI</span></label>
           <label class="check-pill"><input type="checkbox" name="axis" value="Ncréa-2D"><span>Ncréa-2D</span></label>
-          <label class="check-pill"><input type="checkbox" name="axis" value="Je ne sais pas encore"><span>Je ne sais pas encore</span></label>
+          <label class="check-pill"><input type="checkbox" name="axis" value="Je ne sais pas encore"><span data-i18n="modal.axes.unsure">Je ne sais pas encore</span></label>
         </div>
       </div>
 
       <div class="field">
-        <label for="f-desc">Décrivez votre projet en quelques mots</label>
-        <textarea id="f-desc" required placeholder="Ex: Nous lançons une nouvelle gamme et avons besoin d'une identité visuelle complète..."></textarea>
+        <label for="f-desc" data-i18n="modal.desc">Décrivez votre projet en quelques mots</label>
+        <textarea id="f-desc" required placeholder="Ex: Nous lançons une nouvelle gamme et avons besoin d'une identité visuelle complète..." data-i18n-placeholder="modal.desc.ph"></textarea>
       </div>
 
       <div class="field-row">
         <div class="field">
-          <label for="f-budget">Budget approximatif</label>
+          <label for="f-budget" data-i18n="modal.budget">Budget approximatif</label>
           <select id="f-budget">
-            <option value="Moins de 500 $">Moins de 500 $</option>
-            <option value="500 - 1 500 $">500 – 1 500 $</option>
-            <option value="1 500 - 3 000 $">1 500 – 3 000 $</option>
-            <option value="Plus de 3 000 $">Plus de 3 000 $</option>
-            <option value="À définir ensemble" selected>À définir ensemble</option>
+            <option value="Moins de 500 $" data-i18n="modal.budget.o1">Moins de 500 $</option>
+            <option value="500 - 1 500 $" data-i18n="modal.budget.o2">500 – 1 500 $</option>
+            <option value="1 500 - 3 000 $" data-i18n="modal.budget.o3">1 500 – 3 000 $</option>
+            <option value="Plus de 3 000 $" data-i18n="modal.budget.o4">Plus de 3 000 $</option>
+            <option value="À définir ensemble" selected data-i18n="modal.budget.o5">À définir ensemble</option>
           </select>
         </div>
         <div class="field">
-          <label for="f-delai">Délai souhaité</label>
+          <label for="f-delai" data-i18n="modal.delai">Délai souhaité</label>
           <select id="f-delai">
-            <option value="Urgent (moins de 2 semaines)">Urgent (moins de 2 semaines)</option>
-            <option value="Environ 1 mois">Environ 1 mois</option>
-            <option value="2 à 3 mois">2 à 3 mois</option>
-            <option value="Flexible" selected>Flexible</option>
+            <option value="Urgent (moins de 2 semaines)" data-i18n="modal.delai.o1">Urgent (moins de 2 semaines)</option>
+            <option value="Environ 1 mois" data-i18n="modal.delai.o2">Environ 1 mois</option>
+            <option value="2 à 3 mois" data-i18n="modal.delai.o3">2 à 3 mois</option>
+            <option value="Flexible" selected data-i18n="modal.delai.o4">Flexible</option>
           </select>
         </div>
       </div>
 
       <div class="field">
-        <label for="f-dispo">Vos disponibilités pour un premier échange</label>
-        <input type="text" id="f-dispo" placeholder="Ex: Lundi ou mardi après-midi">
+        <label for="f-dispo" data-i18n="modal.dispo">Vos disponibilités pour un premier échange</label>
+        <input type="text" id="f-dispo" placeholder="Ex: Lundi ou mardi après-midi" data-i18n-placeholder="modal.dispo.ph">
       </div>
 
       <button type="submit" class="btn primary" style="width:100%;justify-content:center;">
-        Envoyer ma demande
+        <span data-i18n="modal.submit">Envoyer ma demande</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </button>
 
-      <p class="form-note">Votre demande est transmise directement à Ncréa (email + SMS). Si le service est momentanément indisponible, votre messagerie ou WhatsApp s'ouvriront en secours — aucune donnée n'est stockée sur ce site.</p>
+      <p class="form-note" data-i18n="modal.note">Votre demande est transmise directement à Ncréa (email + SMS). Si le service est momentanément indisponible, votre messagerie ou WhatsApp s'ouvriront en secours — aucune donnée n'est stockée sur ce site.</p>
     </form>
 
     <div class="confirm-panel" id="confirmPanel">
       <div class="confirm-check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
-      <h3>Demande envoyée</h3>
-      <p class="modal-intro" style="margin-bottom:0;">Voici comment se déroule la suite, étape par étape :</p>
+      <h3 data-i18n="modal.confirm.title">Demande envoyée</h3>
+      <p class="modal-intro" style="margin-bottom:0;" data-i18n="modal.confirm.intro">Voici comment se déroule la suite, étape par étape :</p>
       <div class="confirm-steps">
-        <div class="confirm-step"><div class="n">1</div><p><b>Étude de votre demande</b> — nous revenons vers vous sous 48h.</p></div>
-        <div class="confirm-step"><div class="n">2</div><p><b>Rendez-vous de cadrage</b> — un échange pour préciser le besoin et discuter du prix.</p></div>
-        <div class="confirm-step"><div class="n">3</div><p><b>Devis & accord</b> — vous validez le périmètre exact et le tarif convenu.</p></div>
-        <div class="confirm-step"><div class="n">4</div><p><b>Acompte de 50 %</b> — réglé à la validation du devis pour lancer la production, le solde étant dû à la livraison finale.</p></div>
+        <div class="confirm-step"><div class="n">1</div><p data-i18n="modal.confirm.step1"><b>Étude de votre demande</b> — nous revenons vers vous sous 48h.</p></div>
+        <div class="confirm-step"><div class="n">2</div><p data-i18n="modal.confirm.step2"><b>Rendez-vous de cadrage</b> — un échange pour préciser le besoin et discuter du prix.</p></div>
+        <div class="confirm-step"><div class="n">3</div><p data-i18n="modal.confirm.step3"><b>Devis & accord</b> — vous validez le périmètre exact et le tarif convenu.</p></div>
+        <div class="confirm-step"><div class="n">4</div><p data-i18n="modal.confirm.step4"><b>Acompte de 50 %</b> — réglé à la validation du devis pour lancer la production, le solde étant dû à la livraison finale.</p></div>
       </div>
-      <button type="button" class="btn ghost" id="confirmCloseBtn" style="margin-top:10px;">Fermer</button>
+      <button type="button" class="btn ghost" id="confirmCloseBtn" style="margin-top:10px;" data-i18n="modal.confirm.close">Fermer</button>
     </div>
   </div>
 </div>
 
 
 <script>
+
+/* ---------- i18n (FR/EN) ---------- */
+window.I18N_EN = window.I18N_EN || {};
+window.I18N_EN_PLACEHOLDER = window.I18N_EN_PLACEHOLDER || {};
+Object.assign(window.I18N_EN, {
+  'nav.home': 'Home',
+  'nav.savoirfaire': 'What we do',
+  'nav.process': 'Our process',
+  'nav.realisations': 'Work',
+  'nav.contact': 'Contact',
+  'nav.cta': 'Start a project',
+
+  'axis.01': 'Area 01', 'axis.02': 'Area 02', 'axis.03': 'Area 03',
+  'chip.charte': 'Brand guidelines',
+  'chip.supports': 'Printed materials',
+  'chip.animfinale': 'Final animation',
+
+  'footer.blurb': 'Creative studio for visual identity, UX/UI and 2D animation based in Kigali, serving African brands.',
+  'footer.universe': 'Expertise',
+  'footer.studio': 'Studio',
+  'footer.contact': 'Contact',
+  'footer.location': 'Kigali, Rwanda',
+  'footer.copyright': '© 2026 Ncréa. All rights reserved.',
+
+  'modal.eyebrow': 'Start a project',
+  'modal.title': "Let's talk about your brand",
+  'modal.intro': "Answer these few questions: they help us prepare a genuinely useful first call, where we'll scope the exact deliverables and price together.",
+  'modal.company': 'Company name',
+  'modal.company.ph': 'E.g. Umuganda Cooperative',
+  'modal.name': 'Your name',
+  'modal.name.ph': 'E.g. Aline K.',
+  'modal.email': 'Email',
+  'modal.phone': 'Phone (optional)',
+  'modal.axes': 'Which area(s) are you interested in?',
+  'modal.axes.unsure': "I'm not sure yet",
+  'modal.desc': 'Describe your project in a few words',
+  'modal.desc.ph': "E.g. We're launching a new range and need a complete visual identity...",
+  'modal.budget': 'Approximate budget',
+  'modal.budget.o1': 'Under $500',
+  'modal.budget.o2': '$500 – $1,500',
+  'modal.budget.o3': '$1,500 – $3,000',
+  'modal.budget.o4': 'Over $3,000',
+  'modal.budget.o5': "Let's discuss it together",
+  'modal.delai': 'Desired timeline',
+  'modal.delai.o1': 'Urgent (under 2 weeks)',
+  'modal.delai.o2': 'About 1 month',
+  'modal.delai.o3': '2 to 3 months',
+  'modal.delai.o4': 'Flexible',
+  'modal.dispo': 'Your availability for a first call',
+  'modal.dispo.ph': 'E.g. Thursday afternoon',
+  'modal.submit': 'Send my request',
+  'modal.note': "Your request is sent directly to Ncréa (email + SMS). If the service is temporarily unavailable, your mail app or WhatsApp will open as a backup — no data is stored on this site.",
+  'modal.confirm.title': 'Request sent',
+  'modal.confirm.intro': "Here's what happens next, step by step:",
+  'modal.confirm.step1': '<b>Reviewing your request</b> — we get back to you within 48h.',
+  'modal.confirm.step2': '<b>Scoping call</b> — a conversation to clarify the need and discuss pricing.',
+  'modal.confirm.step3': '<b>Quote & agreement</b> — you validate the exact scope and price.',
+  'modal.confirm.step4': '<b>50% deposit</b> — paid once the quote is approved to start production, the balance due on final delivery.',
+  'modal.confirm.close': 'Close',
+});
+
+const LANG_KEY = 'ncrea_lang';
+function getLang(){ return localStorage.getItem(LANG_KEY) || 'fr'; }
+
+function applyLang(lang){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(lang === 'en' && window.I18N_EN[key] !== undefined){
+      if(el.dataset.frCache === undefined) el.dataset.frCache = el.innerHTML;
+      el.innerHTML = window.I18N_EN[key];
+    } else if(el.dataset.frCache !== undefined){
+      el.innerHTML = el.dataset.frCache;
+    }
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-placeholder');
+    if(lang === 'en' && window.I18N_EN_PLACEHOLDER[key] !== undefined){
+      if(el.dataset.frPlaceholderCache === undefined) el.dataset.frPlaceholderCache = el.placeholder;
+      el.placeholder = window.I18N_EN_PLACEHOLDER[key];
+    } else if(el.dataset.frPlaceholderCache !== undefined){
+      el.placeholder = el.dataset.frPlaceholderCache;
+    }
+  });
+  document.documentElement.lang = lang;
+}
+function updateLangButton(lang){
+  document.querySelectorAll('.lang-toggle').forEach(btn=>{ btn.textContent = lang === 'fr' ? 'EN' : 'FR'; });
+}
+function setLang(lang){
+  localStorage.setItem(LANG_KEY, lang);
+  applyLang(lang);
+  updateLangButton(lang);
+  if(window.onLangChange) window.onLangChange(lang);
+}
+document.querySelectorAll('.lang-toggle').forEach(btn=>{
+  btn.addEventListener('click', ()=> setLang(getLang() === 'fr' ? 'en' : 'fr'));
+});
 
 /* ---------- backend API ----------
    Renseignez ici l'URL de votre serveur une fois déployé (voir server/README.md).
@@ -755,21 +854,51 @@ try{
 
     const result = await sendToServer('/api/contact-message', { name, email, subject, message });
 
+    const S = getLang() === 'en'
+      ? { sent: 'Message sent — you\'ll get an email reply very soon. Thank you!',
+          fallback: 'Your mail app and WhatsApp have opened with the message pre-filled. Thanks, talk soon!' }
+      : { sent: 'Message envoyé — vous recevrez une réponse par email très vite. Merci !',
+          fallback: 'Votre messagerie et WhatsApp ont été ouverts avec le message pré-rempli. Merci, à très vite !' };
+
     if(result.ok){
-      document.getElementById('contactNote').textContent = 'Message envoyé — vous recevrez une réponse par email très vite. Merci !';
+      document.getElementById('contactNote').textContent = S.sent;
       form.reset();
     }else{
       const body = 'Nom : ' + name + '\nEmail : ' + email + '\n\n' + message;
       const whatsapp = 'https://wa.me/250799496971?text=' + encodeURIComponent(subject + '\n\n' + body);
       window.open(whatsapp, '_blank');
       window.location.href = 'mailto:otsemstudio@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-      document.getElementById('contactNote').textContent = 'Votre messagerie et WhatsApp ont été ouverts avec le message pré-rempli. Merci, à très vite !';
+      document.getElementById('contactNote').textContent = S.fallback;
     }
 
     if(submitBtn){ submitBtn.disabled = false; submitBtn.style.opacity = ''; }
   });
 })();
 
+const PAGE_I18N_EN = {
+  'contact.hero.title': "Let's talk about your brand.",
+  'contact.hero.desc': 'A question, a quote, just a hello — write to us. To scope a real project, use the "Start a project" form instead.',
+  'contact.phone': 'Phone / WhatsApp',
+  'contact.location': 'Location',
+  'contact.location.desc': 'Kigali, Rwanda — projects delivered across Africa',
+  'contact.specific': 'Have a specific project in mind?',
+  'contact.specific.desc': "Use our dedicated form instead: it lets us prepare a genuinely useful first call.",
+  'contact.name': 'Name',
+  'contact.name.ph': 'Your name',
+  'contact.subject': 'Subject',
+  'contact.subject.ph': 'E.g. Question about your services',
+  'contact.message': 'Message',
+  'contact.message.ph': 'Your message...',
+  'contact.send': 'Send message',
+  'contact.note': "Your message is sent directly to Ncréa. If the service is temporarily unavailable, your mail app and WhatsApp will open as a backup — no data is stored on this site.",
+};
+
+
+/* i18n : fusionne le dictionnaire de la page dans le dictionnaire global, puis applique
+   la langue mémorisée, une fois tous les dictionnaires chargés. */
+if (typeof PAGE_I18N_EN !== 'undefined') Object.assign(window.I18N_EN, PAGE_I18N_EN);
+applyLang(getLang());
+updateLangButton(getLang());
 </script>
 
 </body>
