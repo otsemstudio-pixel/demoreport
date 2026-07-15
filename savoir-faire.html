@@ -100,7 +100,9 @@ button{font:inherit;}
 @media(prefers-reduced-motion:reduce){*{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;}}
 
 /* ================= header ================= */
-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.78);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);}
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.78);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);transition:background .25s ease;}
+header.menu-open{background:#fff;border-bottom-color:transparent;}
+header.menu-open .logo{color:var(--ink);}
 .nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;gap:16px;}
 .logo{font-family:'Fraunces',serif;font-weight:700;font-size:22px;display:flex;align-items:baseline;gap:2px;flex-shrink:0;}
 .logo .dot{color:var(--active);transition:color .5s ease;}
@@ -800,6 +802,8 @@ applyPalette(currentAxis);
     burger.setAttribute('aria-expanded', 'true');
     if(backdrop) backdrop.classList.add('show');
     document.body.style.overflow = 'hidden';
+    const header = burger.closest('header');
+    if(header) header.classList.add('menu-open');
   }
   function closeMenu(){
     links.classList.remove('open');
@@ -807,6 +811,8 @@ applyPalette(currentAxis);
     burger.setAttribute('aria-expanded', 'false');
     if(backdrop) backdrop.classList.remove('show');
     document.body.style.overflow = '';
+    const header = burger.closest('header');
+    if(header) header.classList.remove('menu-open');
   }
   burger.addEventListener('click', ()=>{
     links.classList.contains('open') ? closeMenu() : openMenu();
