@@ -62,6 +62,11 @@ h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;lin
 .manifesto h2{line-height:1.2;}
 @media(max-width:900px){.manifesto h2{line-height:1.4;}}
 .wrap{max-width:1180px;margin:0 auto;padding:0 32px;position:relative;z-index:2;}
+/* Le fond assombri du menu mobile (nav-backdrop, z-index:9) est un enfant du <header>.
+   Sans ceci, il s'affiche PAR-DESSUS le logo et le bouton burger (qui héritent du
+   z-index:2 de .wrap), les faisant paraître délavés/grisés. On force le contenu du
+   header au-dessus de ce fond assombri. */
+header .wrap{z-index:20;}
 button{font:inherit;}
 
 /* ================= AMBIENT AURA ================= */
