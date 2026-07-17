@@ -54,7 +54,7 @@ function requireAdmin(req, res, next) {
 // Les hébergeurs gratuits (Render, Vercel, etc.) bloquent désormais le SMTP classique
 // (ports 25/465/587). Brevo envoie via une requête HTTPS normale (port 443), donc ça
 // fonctionne sans upgrade payant. Voir server/README.md pour la configuration.
-async function sendEmail({ subject, text, replyTo }) {
+async function sendEmail({ to, subject, text, replyTo }) {
   if (!process.env.BREVO_API_KEY || !process.env.BREVO_SENDER_EMAIL) {
     throw new Error('BREVO_API_KEY / BREVO_SENDER_EMAIL manquants dans .env');
   }
@@ -67,8 +67,8 @@ async function sendEmail({ subject, text, replyTo }) {
       'api-key': process.env.BREVO_API_KEY,
     },
     body: JSON.stringify({
-      sender: { name: 'Site Ncréa', email: process.env.BREVO_SENDER_EMAIL },
-      to: [{ email: RECIPIENT_EMAIL }],
+      sender: { name: 'Ncréa', email: process.env.BREVO_SENDER_EMAIL },
+      to: [{ email: to || RECIPIENT_EMAIL }],
       replyTo: replyTo ? { email: replyTo } : undefined,
       subject,
       textContent: text,
@@ -81,6 +81,61 @@ async function sendEmail({ subject, text, replyTo }) {
   }
 
   return res.json();
+}
+
+// ---------- Emails de confirmation envoyés au client (pas à l'agence) ----------
+function projectConfirmationEmail(lang, { name, company }) {
+  const isEn = lang === 'en';
+  if (isEn) {
+    return {
+      subject: `Ncréa received your request — ${company}`,
+      text:
+        `Hi ${name},\n\n` +
+        `Thank you for reaching out about ${company} — we've received your request.\n\n` +
+        `Here's what happens next:\n` +
+        `1. Reviewing your request — we get back to you within 48h.\n` +
+        `2. Scoping call — a conversation to clarify the need and discuss pricing.\n` +
+        `3. Quote & agreement — you validate the exact scope and price.\n` +
+        `4. 50% deposit — paid once the quote is approved to start production, the balance due on final delivery.\n\n` +
+        `In the meantime, feel free to write to us directly at otsemstudio@gmail.com or on WhatsApp at +250 799 496 971 if you have any question.\n\n` +
+        `Talk soon,\nThe Ncréa team`,
+    };
+  }
+  return {
+    subject: `Ncréa a bien reçu votre demande — ${company}`,
+    text:
+      `Bonjour ${name},\n\n` +
+      `Merci pour votre demande concernant ${company} — nous l'avons bien reçue.\n\n` +
+      `Voici comment se déroule la suite :\n` +
+      `1. Étude de votre demande — nous revenons vers vous sous 48h.\n` +
+      `2. Rendez-vous de cadrage — un échange pour préciser le besoin et discuter du prix.\n` +
+      `3. Devis & accord — vous validez le périmètre exact et le tarif convenu.\n` +
+      `4. Acompte de 50 % — réglé à la validation du devis pour lancer la production, le solde étant dû à la livraison finale.\n\n` +
+      `En attendant, n'hésitez pas à nous écrire directement à otsemstudio@gmail.com ou par WhatsApp au +250 799 496 971 si vous avez une question.\n\n` +
+      `À très vite,\nL'équipe Ncréa`,
+  };
+}
+
+function contactConfirmationEmail(lang, { name, message }) {
+  const isEn = lang === 'en';
+  if (isEn) {
+    return {
+      subject: `We received your message — Ncréa`,
+      text:
+        `Hi ${name},\n\n` +
+        `Thank you for your message! We'll get back to you as soon as possible, usually within 48h.\n\n` +
+        `For reference, here's what you sent us:\n"${message}"\n\n` +
+        `Talk soon,\nThe Ncréa team`,
+    };
+  }
+  return {
+    subject: `Nous avons bien reçu votre message — Ncréa`,
+    text:
+      `Bonjour ${name},\n\n` +
+      `Merci pour votre message ! Nous vous répondrons dans les meilleurs délais, généralement sous 48h.\n\n` +
+      `Pour rappel, voici ce que vous nous avez écrit :\n« ${message} »\n\n` +
+      `À très vite,\nL'équipe Ncréa`,
+  };
 }
 
 // ---------- SMS (Africa's Talking) ----------
@@ -259,7 +314,7 @@ app.delete('/api/admin/projects/:id', requireAdmin, async (req, res) => {
 
 // ---------- Formulaire "Démarrer un projet" ----------
 app.post('/api/project-request', submitLimiter, async (req, res) => {
-  const { company, name, email, phone, axes, description, budget, delai, dispo } = req.body || {};
+  const { company, name, email, phone, axes, description, budget, delai, dispo, lang } = req.body || {};
 
   if (!isNonEmptyString(company) || !isNonEmptyString(name) || !isValidEmail(email) || !isNonEmptyString(description)) {
     return res.status(400).json({ ok: false, error: 'Champs requis manquants ou invalides.' });
@@ -284,7 +339,7 @@ app.post('/api/project-request', submitLimiter, async (req, res) => {
     `Ncréa — nouvelle demande : ${company} (${name}). ` +
     `Axe(s): ${axesText}. Budget: ${budget || 'N/A'}. Email: ${email}. Voir votre boîte mail pour le détail.`;
 
-  const result = { ok: true, email: 'skipped', sms: 'skipped' };
+  const result = { ok: true, email: 'skipped', sms: 'skipped', clientEmail: 'skipped' };
 
   try {
     await sendEmail({ subject: emailSubject, text: emailBody, replyTo: email });
@@ -304,12 +359,22 @@ app.post('/api/project-request', submitLimiter, async (req, res) => {
     // On ne bloque pas la requête si seul le SMS échoue et que l'email est parti.
   }
 
+  try {
+    const confirmation = projectConfirmationEmail(lang, { name, company });
+    await sendEmail({ to: email, subject: confirmation.subject, text: confirmation.text, replyTo: RECIPIENT_EMAIL });
+    result.clientEmail = 'sent';
+  } catch (err) {
+    console.error('Erreur envoi email de confirmation client:', err.message);
+    result.clientEmail = 'failed';
+    // Non bloquant : la demande principale a déjà été traitée ci-dessus.
+  }
+
   res.status(result.email === 'sent' ? 200 : 502).json(result);
 });
 
 // ---------- Formulaire de contact simple ----------
 app.post('/api/contact-message', submitLimiter, async (req, res) => {
-  const { name, email, subject, message } = req.body || {};
+  const { name, email, subject, message, lang } = req.body || {};
 
   if (!isNonEmptyString(name) || !isValidEmail(email) || !isNonEmptyString(message)) {
     return res.status(400).json({ ok: false, error: 'Champs requis manquants ou invalides.' });
@@ -319,7 +384,7 @@ app.post('/api/contact-message', submitLimiter, async (req, res) => {
   const emailBody = `Nom : ${name}\nEmail : ${email}\n\n${message}\n\n— Répondez directement à cet email pour écrire à ${name}.`;
   const smsBody = `Ncréa — nouveau message de ${name} (${email}). Voir votre boîte mail pour le détail.`;
 
-  const result = { ok: true, email: 'skipped', sms: 'skipped' };
+  const result = { ok: true, email: 'skipped', sms: 'skipped', clientEmail: 'skipped' };
 
   try {
     await sendEmail({ subject: emailSubject, text: emailBody, replyTo: email });
@@ -336,6 +401,15 @@ app.post('/api/contact-message', submitLimiter, async (req, res) => {
   } catch (err) {
     console.error('Erreur envoi SMS:', err.message);
     result.sms = 'failed';
+  }
+
+  try {
+    const confirmation = contactConfirmationEmail(lang, { name, message });
+    await sendEmail({ to: email, subject: confirmation.subject, text: confirmation.text, replyTo: RECIPIENT_EMAIL });
+    result.clientEmail = 'sent';
+  } catch (err) {
+    console.error('Erreur envoi email de confirmation client:', err.message);
+    result.clientEmail = 'failed';
   }
 
   res.status(result.email === 'sent' ? 200 : 502).json(result);

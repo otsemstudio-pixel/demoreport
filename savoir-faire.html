@@ -649,6 +649,7 @@ footer{padding:56px 0 40px;position:relative;}
         <div class="confirm-step"><div class="n">3</div><p data-i18n="modal.confirm.step3"><b>Devis & accord</b> — vous validez le périmètre exact et le tarif convenu.</p></div>
         <div class="confirm-step"><div class="n">4</div><p data-i18n="modal.confirm.step4"><b>Acompte de 50 %</b> — réglé à la validation du devis pour lancer la production, le solde étant dû à la livraison finale.</p></div>
       </div>
+      <p class="form-note" style="margin-top:18px;" data-i18n="modal.confirm.emailnote">Un email récapitulatif vient de vous être envoyé pour garder une trace de cet échange.</p>
       <button type="button" class="btn ghost" id="confirmCloseBtn" style="margin-top:10px;" data-i18n="modal.confirm.close">Fermer</button>
     </div>
   </div>
@@ -715,6 +716,7 @@ Object.assign(window.I18N_EN, {
   'modal.confirm.step3': '<b>Quote & agreement</b> — you validate the exact scope and price.',
   'modal.confirm.step4': '<b>50% deposit</b> — paid once the quote is approved to start production, the balance due on final delivery.',
   'modal.confirm.close': 'Close',
+  'modal.confirm.emailnote': "A summary email has just been sent to you to keep a record of this exchange.",
 });
 
 const LANG_KEY = 'ncrea_lang';
@@ -905,7 +907,7 @@ try{
     const dispo = document.getElementById('f-dispo').value;
 
     const result = await sendToServer('/api/project-request', {
-      company, name, email, phone, axes: axesList, description: desc, budget, delai, dispo
+      company, name, email, phone, axes: axesList, description: desc, budget, delai, dispo, lang: getLang()
     });
 
     if(!result.ok){
